@@ -1,94 +1,64 @@
-<script setup>
-import WelcomeItem from './WelcomeItem.vue'
-import DocumentationIcon from './icons/IconDocumentation.vue'
-import ToolingIcon from './icons/IconTooling.vue'
-import EcosystemIcon from './icons/IconEcosystem.vue'
-import CommunityIcon from './icons/IconCommunity.vue'
-import SupportIcon from './icons/IconSupport.vue'
-
-const openReadmeInEditor = () => fetch('/__open-in-editor?file=README.md')
-</script>
-
 <template>
-  <WelcomeItem>
-    <template #icon>
-      <DocumentationIcon />
-    </template>
-    <template #heading>Documentation</template>
-
-    Vue’s
-    <a href="https://vuejs.org/" target="_blank" rel="noopener">official documentation</a>
-    provides you with all information you need to get started.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <ToolingIcon />
-    </template>
-    <template #heading>Tooling</template>
-
-    This project is served and bundled with
-    <a href="https://vite.dev/guide/features.html" target="_blank" rel="noopener">Vite</a>. The
-    recommended IDE setup is
-    <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">VSCode</a>
-    +
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank" rel="noopener">Volar</a>. If
-    you need to test your components and web pages, check out
-    <a href="https://vitest.dev/" target="_blank" rel="noopener">Vite</a>
-    and
-    <a href="https://www.cypress.io/" target="_blank" rel="noopener">Cypress</a>
-    /
-    <a href="https://playwright.dev/" target="_blank" rel="noopener">Playwright</a>.
-
-    <br />
-
-    More instructions are available in
-    <a href="javascript:void(0)" @click="openReadmeInEditor"><code>README.md</code></a
-    >.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <EcosystemIcon />
-    </template>
-    <template #heading>Ecosystem</template>
-
-    Get official tools and libraries for your project:
-    <a href="https://pinia.vuejs.org/" target="_blank" rel="noopener">Pinia</a>,
-    <a href="https://router.vuejs.org/" target="_blank" rel="noopener">Vue Router</a>,
-    <a href="https://test-utils.vuejs.org/" target="_blank" rel="noopener">Vue Test Utils</a>, and
-    <a href="https://github.com/vuejs/devtools" target="_blank" rel="noopener">Vue Dev Tools</a>. If
-    you need more resources, we suggest paying
-    <a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">Awesome Vue</a>
-    a visit.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <CommunityIcon />
-    </template>
-    <template #heading>Community</template>
-
-    Got stuck? Ask your question on
-    <a href="https://chat.vuejs.org" target="_blank" rel="noopener">Vue Land</a>
-    (our official Discord server), or
-    <a href="https://stackoverflow.com/questions/tagged/vue.js" target="_blank" rel="noopener"
-      >StackOverflow</a
-    >. You should also follow the official
-    <a href="https://bsky.app/profile/vuejs.org" target="_blank" rel="noopener">@vuejs.org</a>
-    Bluesky account or the
-    <a href="https://x.com/vuejs" target="_blank" rel="noopener">@vuejs</a>
-    X account for latest news in the Vue world.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <SupportIcon />
-    </template>
-    <template #heading>Support Vue</template>
-
-    As an independent project, Vue relies on community backing for its sustainability. You can help
-    us by
-    <a href="https://vuejs.org/sponsor/" target="_blank" rel="noopener">becoming a sponsor</a>.
-  </WelcomeItem>
+  <div>
+    <input v-model="newMessage" placeholder="Type a message" />
+    <button @click="addMessage">Add Message</button>
+    <ul>
+      <li v-for="message in messages" :key="message.id">{{ message.text }} - {{ message.createdAt }}
+        <button @click="deleteMessage(message.id)">deleteMessage</button>
+      </li>
+    </ul>
+  </div>
 </template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      messages: [],
+      newMessage: ''
+    };
+  },
+  methods: {
+    // 메시지 추가
+    async addMessage() {
+      if (this.newMessage.trim()) {
+        try {
+          const response = await axios.post('http://180.83.251.5:8080/api/messages', {
+            text: this.newMessage
+          });
+          this.messages.push(response.data); // 서버에서 반환된 데이터를 추가
+          this.newMessage = '';
+        } catch (error) {
+          console.error('Failed to add message:', error);
+        }
+      }
+    },
+
+    // 메시지 삭제
+    async deleteMessage(id) {
+      try {
+        await axios.delete(`http://180.83.251.5:8080/api/messages/${id}`);
+        this.messages = this.messages.filter(message => message.id !== id); // 삭제된 메시지 제거
+      } catch (error) {
+        console.error('Failed to delete message:', error);
+      }
+    },
+
+    // 초기 메시지 로드
+    async loadMessages() {
+      try {
+        const response = await axios.get('http://180.83.251.5:8080/api/messages');
+        this.messages = response.data;
+      } catch (error) {
+        console.error('Failed to load messages:', error);
+      }
+    }
+  },
+  
+  mounted() {
+    this.loadMessages(); // 컴포넌트가 로드될 때 초기 메시지 가져오기
+  }
+};
+</script>

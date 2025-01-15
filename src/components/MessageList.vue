@@ -25,7 +25,7 @@ export default {
     async addMessage() {
       if (this.newMessage.trim()) {
         try {
-          const response = await axios.post('http://192.168.0.2:8080/api/messages', {
+          const response = await axios.post('http://180.83.251.5:8080/api/messages', {
             text: this.newMessage
           });
           this.messages.push(response.data); // 서버에서 반환된 데이터를 추가
@@ -39,7 +39,7 @@ export default {
     // 메시지 삭제
     async deleteMessage(id) {
       try {
-        await axios.delete(`http://192.168.0.2:8080/api/messages/${id}`);
+        await axios.delete(`http://180.83.251.5:8080/api/messages/${id}`);
         this.messages = this.messages.filter(message => message.id !== id); // 삭제된 메시지 제거
       } catch (error) {
         console.error('Failed to delete message:', error);
@@ -49,7 +49,7 @@ export default {
     // 초기 메시지 로드
     async loadMessages() {
       try {
-        const response = await axios.get('http://192.168.0.2:8080/api/messages');
+        const response = await axios.get('http://180.83.251.5:8080/api/messages');
         this.messages = response.data;
       } catch (error) {
         console.error('Failed to load messages:', error);
