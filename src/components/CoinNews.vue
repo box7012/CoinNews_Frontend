@@ -3,7 +3,8 @@
       <input v-model="searchQuery" placeholder="검색어를 입력하세요" />
       <button @click="searchNews">검색</button>
       <ul>
-        <li v-for="information in news" :key="information.id">{{ information.date }} - {{ information.title }}</li>
+        <li v-for="information in news" :key="information.id">
+            {{ information.id }} - {{ information.title }}</li>
       </ul>
     </div>
   </template>
@@ -49,7 +50,7 @@
 
         startmessagePolling() {
             this.loadMessages();
-            setInterval(this.loadMessages, 5000); 
+            setInterval(this.loadMessages, 10000); // 10초
         }
     },
 

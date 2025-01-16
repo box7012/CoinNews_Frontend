@@ -2,31 +2,29 @@
   <div id="app">
     <div class="grid">
       <div class="frame-item">
-        <MessageList />
+        <CoinNewsVue />
       </div>
       <div class="frame-item">
-        <MessageList />
+        <CoinNewsVue />
       </div>
       <div class="frame-item">
-        <MessageList />
+        <CoinNewsVue />
       </div>
       <div class="frame-item">
-        <MessageList />
+        <CoinNewsVue />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import MessageList from './components/MessageList.vue';
+import CoinNewsVue from './components/CoinNews.vue';
+
 
 export default {
   name: 'App',
   components: {
-    MessageList,
-    MessageList,
-    MessageList,
-    MessageList,
+    CoinNewsVue,
   },
 };
 </script>
