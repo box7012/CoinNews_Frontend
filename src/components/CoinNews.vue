@@ -7,9 +7,11 @@
         <button @click="searchNews">검색</button>
       </div>
     </div>
-    <ul>
+    <ul class="news-list">
       <li v-for="information in news" :key="information.id">
-        {{ information.id }} - {{ information.title }}
+        <a :href="information.link" target="_blank" rel="noopener noreferrer">
+          {{ information.id }} - {{ information.title }}
+        </a>
       </li>
     </ul>
   </div>
@@ -66,6 +68,17 @@ export default {
 </script>
 
 <style scoped>
+
+  .news-list {
+    list-style-type: none; /* 기본 점 기호 제거 */
+    padding-left: 0; /* 기본 여백 제거 */
+    text-align: left; /* 왼쪽 정렬 */
+  }
+
+  .news-list li {
+    margin-bottom: 10px; /* 항목 간격 */
+  }
+
   /* 전체 컨테이너 */
   .header {
     display: flex; /* 수평 정렬 */
