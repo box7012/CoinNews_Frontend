@@ -3,7 +3,8 @@
     <input v-model="newMessage" placeholder="Type a message" />
     <button @click="addMessage">Add Message</button>
     <ul>
-      <li v-for="message in messages" :key="message.id">{{ message.text }} - {{ message.createdAt }}
+      <li v-for="message in messages" :key="message.id">
+        {{ message.text }} - {{ message.createdAt }}
         <button @click="deleteMessage(message.id)">deleteMessage</button>
       </li>
     </ul>

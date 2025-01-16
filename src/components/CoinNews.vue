@@ -1,62 +1,128 @@
 <template>
-    <div>
-      <input v-model="searchQuery" placeholder="검색어를 입력하세요" />
-      <button @click="searchNews">검색</button>
-      <ul>
-        <li v-for="information in news" :key="information.id">
-            {{ information.id }} - {{ information.title }}</li>
-      </ul>
+  <div>
+    <div class="header">
+      <h1>뉴스</h1>
+      <div class="search-bar">
+        <input v-model="searchQuery" placeholder="검색어를 입력하세요" />
+        <button @click="searchNews">검색</button>
+      </div>
     </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    data() {
-      return {
-        searchQuery: "",
-        news: [],
-      };
-    },
+    <ul>
+      <li v-for="information in news" :key="information.id">
+        {{ information.id }} - {{ information.title }}
+      </li>
+    </ul>
+  </div>
+</template>
 
-    methods: {
+<script>
+import axios from 'axios';
 
-        async searchNews() {
-            try {
-                if (!this.searchQuery.trim()) {
-                    alert("검색어를 입력하세요.");
-                    return;
-                }
+export default {
+  data() {
+    return {
+      searchQuery: "",
+      news: [],
+    };
+  },
 
-                const response = await axios.post("http://180.83.251.5:8080/api/news/search", {
-                    query: this.searchQuery,
-                })
-
-                this.news = response.data.slice(-5);
-            } catch (error) {
-                console.error("검색 실패 : ", error);
-            }
-        },
-
-        async loadMessages() {
-            try {
-                const response = await axios.get('http://180.83.251.5:8080/api/news');
-                this.news = response.data.slice(-5);
-            } catch (error) {
-                console.error("Failed to load Messages: ", error)
-            }
-        },
-
-        startmessagePolling() {
-            this.loadMessages();
-            setInterval(this.loadMessages, 10000); // 10초
+  methods: {
+    async searchNews() {
+      try {
+        if (!this.searchQuery.trim()) {
+          alert("검색어를 입력하세요.");
+          return;
         }
+
+        const response = await axios.post("http://180.83.251.5:8080/api/news/search", {
+          query: this.searchQuery,
+        });
+
+        this.news = response.data.slice(-5);
+      } catch (error) {
+        console.error("검색 실패 : ", error);
+      }
     },
 
-    
-    mounted() {
-      this.startmessagePolling();
+    async loadMessages() {
+      try {
+        const response = await axios.get('http://180.83.251.5:8080/api/news');
+        this.news = response.data.slice(-5);
+      } catch (error) {
+        console.error("Failed to load Messages: ", error);
+      }
+    },
+
+    startmessagePolling() {
+      this.loadMessages();
+      setInterval(this.loadMessages, 10000); // 10초
     }
-  };
-  </script>
+  },
+
+  mounted() {
+    this.startmessagePolling();
+  }
+};
+</script>
+
+<style scoped>
+  /* 전체 컨테이너 */
+  .header {
+    display: flex; /* 수평 정렬 */
+    justify-content: space-between; /* 양 끝 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    width: 100%; /* 부모의 너비에 맞게 */
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    color: #4C91F1;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+  }
+
+  /* 검색 바 스타일 */
+  .search-bar {
+    position: absolute;
+    right: 10px;
+    display: flex; /* 수평 정렬 */
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    align-items: center; /* 버튼과 입력 필드 높이 정렬 */
+    gap: 8px; /* 입력 필드와 버튼 사이 간격 */
+  }
+
+  input {
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex: 1; /* 입력 필드가 늘어나도록 */
+  }
+
+  button {
+    background-color: #4C91F1;
+    color: white;
+    border: none;
+    padding: 2px 8px;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: normal;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+  }
+
+  button:hover {
+    background-color: #3b7cd7;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  button:active {
+    transform: translateY(2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+</style>
