@@ -12,14 +12,19 @@
             <input v-model="password" type="password" id="password" required />
           </div>
           <button type="submit">로그인</button>
+          <button @click="goToSignUp" type="button"  class="signup-btn">회원가입</button>
           <button @click="closeModal" type="button">닫기</button>
         </form>
       </div>
     </div>
+    
   </template>
   
-  <script>
-  export default {
+<script>
+
+ import { useRoute } from 'vue-router';
+ 
+ export default {
     props: {
       show: Boolean,
     },
@@ -29,6 +34,14 @@
         password: '',
       };
     },
+
+    setup() {
+        const route = useRoute();
+        return {
+            route
+        };
+    },
+
     methods: {
       login() {
         alert('로그인 성공!');
@@ -36,6 +49,11 @@
       },
       closeModal() {
         this.$emit('close');
+      },
+      goToSignUp() {
+        // window.location.href = "/signup"; //페이지 리로드
+        this.$router.push("/signup"); // 회원가입 페이지로 이동
+        this.$emit("close"); // 로그인 모달 닫기
       },
     },
   };
