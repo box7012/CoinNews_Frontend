@@ -1,6 +1,8 @@
 <template>
+
   <div id="app">
-    <div class="sign-in-up">5</div>
+    <button @click="showLoginModal = true" class="login-btn">로그인</button>
+    <LoginModal v-if="showLoginModal" :show="showLoginModal" @close="showLoginModal = false" />
     <div class="grid">
       <div class="frame-item">
         <CoinNewsVue />
@@ -20,12 +22,19 @@
 
 <script>
 import CoinNewsVue from './components/CoinNews.vue';
-
+import LoginModal from './components/LoginModal.vue';
 
 export default {
+  data() {
+    return {
+      showLoginModal: false,
+    }
+  },
+
   name: 'App',
   components: {
     CoinNewsVue,
+    LoginModal,
   },
 };
 </script>
@@ -38,7 +47,7 @@ export default {
   min-height: 1h;
   padding: 0 10px;
   box-sizing: border-box; /* 패딩이 콘텐츠 크기에 포함되도록 설정 */
-  max-height: 1300px;
+  max-height: 900px;
   max-width: 1180px; /* 최대 너비 제한 */
   width:100%; /* 전체 너비의 90%로 설정 */
 }
@@ -48,7 +57,7 @@ export default {
   grid-template-columns: repeat(2, 1fr); /* 2열 레이아웃 */
   grid-gap: 5px; /* 항목 간격 */
   width: 100%; /* 그리드의 너비를 부모와 맞추기 */
-  height: 100%;
+  height: 84%;
 }
 
 .frame-item {
@@ -67,12 +76,23 @@ export default {
   min-width: 400px; /* 최소 너비 제한 */
 }
 
-/* sign-in-up 스타일 추가 */
-.sign-in-up {
-  position: absolute; /* 화면 내에서 자유롭게 위치 지정 */
-  top: 10px; /* 화면 위쪽으로부터 10px 떨어짐 */
-  right: 10px; /* 화면 오른쪽으로부터 10px 떨어짐 */
-  font-size: 1.2rem; /* 텍스트 크기 */
-  color: black; /* 텍스트 색상 */
+
+.login-btn {
+  position: absolute; /* 부모 요소를 기준으로 위치 */
+  top: 20px; /* 상단에서 20px 위치 */
+  right: 20px; /* 오른쪽에서 20px 위치 */
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
 }
+
+.login-btn:hover {
+  background-color: #0056b3; /* hover 시 색상 변경 */
+}
+
+
 </style>
