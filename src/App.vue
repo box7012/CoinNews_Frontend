@@ -50,6 +50,7 @@ export default {
   max-height: 900px;
   max-width: 1180px; /* 최대 너비 제한 */
   width:100%; /* 전체 너비의 90%로 설정 */
+  position: relative;
 }
 
 .grid {
@@ -57,7 +58,10 @@ export default {
   grid-template-columns: repeat(2, 1fr); /* 2열 레이아웃 */
   grid-gap: 5px; /* 항목 간격 */
   width: 100%; /* 그리드의 너비를 부모와 맞추기 */
-  height: 84%;
+  height: 100%;
+  padding-top: 70px;
+  
+  
 }
 
 .frame-item {
@@ -69,11 +73,12 @@ export default {
   border: 1px solid #ccc; /* 확인용 테두리 */
   border-radius: 10px;
   height: 50vh; /* 화면 너비의 26%로 높이 설정 */
-  min-height: 350px;
-  max-height: 450px;
+  min-height: 250px;
+  max-height: 400px;
   width: 50vw; /* 화면 너비의 32%로 너비 설정 */
   max-width: 550px; /* 최대 너비 제한 */
-  min-width: 400px; /* 최소 너비 제한 */
+  min-width: 500px; /* 최소 너비 제한 */
+  
 }
 
 
