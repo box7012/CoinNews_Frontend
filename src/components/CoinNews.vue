@@ -5,6 +5,7 @@
       <div class="search-bar">
         <input v-model="searchQuery" placeholder="검색어를 입력하세요" />
         <button @click="searchNews">검색</button>
+        <button @click="deleteSearchQuery">x</button>
       </div>
     </div>
     <ul class="news-list">
@@ -46,10 +47,16 @@ export default {
       }
     },
 
+    deleteSearchQuery() {
+      this.searchQuery = ""
+    },
+
     async loadMessages() {
       try {
-        const response = await axios.get('http://180.83.251.5:8080/api/news');
-        this.news = response.data.slice(-5);
+        if (!this.searchQuery) { 
+          const response = await axios.get('http://180.83.251.5:8080/api/news');
+          this.news = response.data.slice(-5);
+        }
       } catch (error) {
         console.error("Failed to load Messages: ", error);
       }
