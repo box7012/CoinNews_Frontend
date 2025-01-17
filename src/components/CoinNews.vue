@@ -48,7 +48,8 @@ export default {
     },
 
     deleteSearchQuery() {
-      this.searchQuery = ""
+      this.searchQuery = "";
+      this.loadMessages();
     },
 
     async loadMessages() {
