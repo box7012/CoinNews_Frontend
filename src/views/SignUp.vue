@@ -5,12 +5,14 @@
     <form>
       <input type="email" v-model="email" placeholder="이메일" @blur="validateEmail" />
       <p v-if="emailError" class="error">{{ emailError }}</p>
+      <button @click="emailDuplicateCheck" :disabled="Boolean(emailError)">중복 검사</button>
+      <p v-if="emailStatusok || emailStatusbad">{{ emailStatusok || emailStatusbad }}</p>
       <input type="password" v-model="password" placeholder="비밀번호" />
       <input type="password" v-model="password_check"  placeholder="비밀번호 확인" @input="validatePassword" />
       
       <!-- 비밀번호 불일치 메시지 -->
       <p v-if="passwordError" class="error">{{ passwordError }}</p>
-      <button type="button" :disabled="Boolean(passwordError)" @click="processSignup">회원가입</button>
+      <button type="button" :disabled="!emailPasswordValidation" @click="processSignup">회원가입</button>
 
     </form>
   </div>
@@ -28,6 +30,8 @@ export default {
       password_check: '',
       emailError: '', // 이메일 중복 확인 에러
       passwordError: '', // 비밀번호 불일치 메시지 저장
+      emailStatusok: '',
+      emailStatusbad: '',
     };
   },
   setup() {
@@ -36,6 +40,12 @@ export default {
             route
         };
     },
+
+  computed: {
+    emailPasswordValidation() {
+      return !this.emailError && !this.passwordError;
+    },
+  },
   methods: {
     validatePassword() {
       if (this.password !== this.password_check) {
@@ -45,14 +55,33 @@ export default {
       }
     },
 
-      validateEmail() {
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(this.email)) {
-            this.emailError = '유효한 이메일 형식이 아닙니다.';
-          } else {
-            this.emailError = '';
+    validateEmail() {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(this.email)) {
+          this.emailError = '유효한 이메일 형식이 아닙니다.';
+        } else {
+          this.emailError = '';
+      }
+    },
+
+    async emailDuplicateCheck() {
+      const response = await axios.post('http://180.83.251.5:8080/api/signup/emailcheck', {
+        email: this.email
+      })
+      try {
+        if (response.data=="이미 존재하는 이메일 입니다.") {
+          this.emailStatusbad = "이미 존재하는 이메일 입니다.";
+          this.emailStatusok = "";
+        } else if (response.data=="유효한 이메일 입니다.") {
+          this.emailStatusok = "유효한 이메일 입니다.";
+          this.emailStatusbad = "";
         }
-      },
+        
+      } catch (error) {
+        console.error(error);
+        alert("이메일 중복 체크 실패")
+      }
+    },
 
     async processSignup() {
       if (this.passwordError) {
@@ -76,7 +105,6 @@ export default {
         alert('회원가입 실패');
       }
     },
-
   },
 };
 </script>
