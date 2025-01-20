@@ -5,7 +5,7 @@
     <form>
       <input type="email" v-model="email" placeholder="이메일" @blur="validateEmail" />
       <p v-if="emailError" class="error">{{ emailError }}</p>
-      <button @click="emailDuplicateCheck" :disabled="Boolean(emailError)">중복 검사</button>
+      <button type="button" @click="emailDuplicateCheck" :disabled="Boolean(emailError)">중복 검사</button>
       <p v-if="emailStatusok || emailStatusbad">{{ emailStatusok || emailStatusbad }}</p>
       <input type="password" v-model="password" placeholder="비밀번호" />
       <input type="password" v-model="password_check"  placeholder="비밀번호 확인" @input="validatePassword" />
@@ -65,23 +65,41 @@ export default {
     },
 
     async emailDuplicateCheck() {
-      const response = await axios.post('http://180.83.251.5:8080/api/signup/emailcheck', {
-        email: this.email
-      })
-      try {
-        if (response.data=="이미 존재하는 이메일 입니다.") {
-          this.emailStatusbad = "이미 존재하는 이메일 입니다.";
-          this.emailStatusok = "";
-        } else if (response.data=="유효한 이메일 입니다.") {
-          this.emailStatusok = "유효한 이메일 입니다.";
-          this.emailStatusbad = "";
-        }
-        
-      } catch (error) {
-        console.error(error);
-        alert("이메일 중복 체크 실패")
+    try {
+      // 서버로 중복 체크 요청 전송
+      const response = await axios.post('http://180.83.251.5:8080/api/emailcheck', {
+        email: this.email,
+      });
+
+      // 응답 상태에 따른 처리
+      if (response.status === 200) {
+        this.emailStatusok = "유효한 이메일 입니다.";
+        this.emailStatusbad = "";
+      } else if (response.status === 409) {
+        this.emailStatusbad = "이미 존재하는 이메일 입니다.";
+        this.emailStatusok = "";
+      } else {
+        console.warn("Unexpected status:", response.status);
+        alert("예상치 못한 응답 상태입니다. 다시 시도해주세요.");
       }
-    },
+    } catch (error) {
+      // 에러 처리
+      console.error("Error during email check:", error);
+
+      if (error.response) {
+        // 서버 응답이 있는 경우
+        if (error.response.status === 500) {
+          alert("서버 오류로 인해 중복 확인에 실패했습니다.");
+        } else {
+          alert(`오류 발생: ${error.response.data || "알 수 없는 이유"}`);
+        }
+      } else {
+        // 서버에 도달하지 못한 경우
+        alert("서버와 연결할 수 없습니다. 네트워크 상태를 확인하세요.");
+      }
+    }
+  },
+
 
     async processSignup() {
       if (this.passwordError) {
@@ -104,7 +122,7 @@ export default {
         console.error(error);
         alert('회원가입 실패');
       }
-    },
+    },  
   },
 };
 </script>
