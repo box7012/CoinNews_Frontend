@@ -13,10 +13,10 @@
         </thead>
         <tbody>
           <tr v-for="coin in coins" :key="coin.id">
-            <td>{{ coin.name }}</td>
-            <td>${{ coin.current_price.toLocaleString() }}</td>
-            <td>${{ coin.total_volume.toLocaleString() }}</td>
-            <td :style="{ color: coin.price_change_percentage_24h > 0 ? 'green' : 'red' }">
+            <td class="coin-name">{{ coin.name }}</td>
+            <td class="coin-price">${{ coin.current_price.toLocaleString() }}</td>
+            <td class="coin-volume">${{ coin.total_volume.toLocaleString() }}</td>
+            <td class="coin-price-change" :style="{ color: coin.price_change_percentage_24h > 0 ? 'green' : 'red' }">
               {{ coin.price_change_percentage_24h.toFixed(2) }}%
             </td>
           </tr>
@@ -101,8 +101,12 @@
   
   .crypto-table {
     width: 100%;
+    overflow-y: auto;
+    margin-top: 20px;
+    max-height: 400px; /* 테이블 최대 높이 설정 */
     border-collapse: collapse;
     margin-top: 20px;
+    
   }
   
   .crypto-table th,
@@ -110,6 +114,7 @@
     padding: 5px;
     text-align: center;
     border: 1px solid #ddd;
+    text-overflow: ellipsis; /* 긴 내용 생략(...) 표시 */
     font-size: 1rem;
   }
   
@@ -137,5 +142,24 @@
   .crypto-table td:nth-child(4) {
     font-weight: bold;
   }
+
+.coin-name {
+width: 15%; /* 선택 열 폭 조정 */
+}
+
+.coin-price {
+width: 15%; /* 제목 열 폭 조정 */
+}
+
+.coin-volume {
+width: 45%; /* 날짜 열 폭 조정 */
+}
+
+.coin-price-change {
+width: 25%; /* 링크 열 폭 조정 */
+}
+
+
+
   </style>
   

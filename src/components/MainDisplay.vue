@@ -86,6 +86,7 @@
     width: 50vw; /* 화면 너비의 32%로 너비 설정 */
     max-width: 550px; /* 최대 너비 제한 */
     min-width: 500px; /* 최소 너비 제한 */
+    overflow: hidden;
     
   }
   

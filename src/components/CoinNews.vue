@@ -8,13 +8,26 @@
         <button @click="deleteSearchQuery">x</button>
       </div>
     </div>
-    <ul class="news-list">
-      <li v-for="information in news" :key="information.id">
-        <a :href="information.link" target="_blank" rel="noopener noreferrer">
-          {{ information.id }} - {{ information.title }}
-        </a>
-      </li>
-    </ul>
+
+    <table class="news-table">
+      <thead>
+        <tr>
+          <th>선택</th>
+          <th>제목</th>
+          <th>날짜</th>
+          <th>링크</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="information in news" :key="information.id">
+          <td><input type="checkbox" :value="information.id" v-model="selectedIds" /></td>
+          <td class="title-column">{{ information.title }}</td>
+          <td class="date-column">{{ formatDate(information.date) }}</td>
+          <td class="link-column"><a :href="information.link" target="_blank" rel="noopener noreferrer">링크</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -66,7 +79,20 @@ export default {
     startmessagePolling() {
       this.loadMessages();
       setInterval(this.loadMessages, 10000); // 10초
-    }
+    },
+
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleString('ko-KR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false // 24시간 포맷 사용
+      }).replace(',', '').replace('/', '-').replace('/', '-');
+    },
+
   },
 
   mounted() {
@@ -146,4 +172,57 @@ export default {
     transform: translateY(2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
+
+  .news-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.news-table th,
+.news-table td {
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.news-table th {
+  background-color: #f4f4f4;
+}
+
+.news-table td a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.news-table td a:hover {
+  text-decoration: underline;
+}
+
+.news-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.news-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+
+.select-column {
+  width: 10%; /* 선택 열 폭 조정 */
+}
+
+.title-column {
+  width: 60%; /* 제목 열 폭 조정 */
+}
+
+.date-column {
+  width: 20%; /* 날짜 열 폭 조정 */
+}
+
+.link-column {
+  width: 10%; /* 링크 열 폭 조정 */
+}
+
+
 </style>
