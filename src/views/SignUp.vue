@@ -3,9 +3,10 @@
   <div class="signup">
     <h1>회원가입</h1>
     <form>
-      <input type="email" v-model="email" placeholder="이메일" />
+      <input type="email" v-model="email" placeholder="이메일" @blur="validateEmail" />
+      <p v-if="emailError" class="error">{{ emailError }}</p>
       <input type="password" v-model="password" placeholder="비밀번호" />
-      <input type="password" v-model="password_check"  placeholder="비밀번호 확인"  @input="validatePassword" />
+      <input type="password" v-model="password_check"  placeholder="비밀번호 확인" @input="validatePassword" />
       
       <!-- 비밀번호 불일치 메시지 -->
       <p v-if="passwordError" class="error">{{ passwordError }}</p>
@@ -43,6 +44,15 @@ export default {
         this.passwordError = '';
       }
     },
+
+      validateEmail() {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(this.email)) {
+            this.emailError = '유효한 이메일 형식이 아닙니다.';
+          } else {
+            this.emailError = '';
+        }
+      },
 
     async processSignup() {
       if (this.passwordError) {
