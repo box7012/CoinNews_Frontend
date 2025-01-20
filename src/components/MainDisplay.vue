@@ -6,16 +6,16 @@
       <LoginModal v-if="showLoginModal" :show="showLoginModal" @close="showLoginModal = false" />
       <div class="grid">
         <div class="frame-item">
-          <CoinNewsVue />
+          <CoinMarketVue />
+        </div>
+        <div class="frame-item">
+          <CoinChartVue />
         </div>
         <div class="frame-item">
           <CoinNewsVue />
         </div>
         <div class="frame-item">
-          <CoinNewsVue />
-        </div>
-        <div class="frame-item">
-          <CoinNewsVue />
+          <CoinNewsScrap />
   
         </div>
       </div>
@@ -23,7 +23,10 @@
   </template>
   
   <script>
-  import CoinNewsVue from './CoinNews.vue';
+  import CoinMarketVue from './CoinMarket.vue'
+  import CoinChartVue from './CoinChart.vue';
+  import CoinNewsVue from './CoinNews.vue'
+  import CoinNewsScrap from './CoinNewsScrap.vue';
   import LoginModal from './LoginModal.vue';
   
   export default {
@@ -36,7 +39,10 @@
     name: 'App',
     components: {
       CoinNewsVue,
+      CoinChartVue,
       LoginModal,
+      CoinNewsScrap,
+      CoinMarketVue,
     },
   };
   </script>
