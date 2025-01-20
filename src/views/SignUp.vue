@@ -1,21 +1,22 @@
 <template>
+  <router-view />
   <div class="signup">
     <h1>회원가입</h1>
-    <form @submit.prevent="handleSignup">
+    <form>
       <input type="email" v-model="email" placeholder="이메일" />
-
       <input type="password" v-model="password" placeholder="비밀번호" />
       <input type="password" v-model="password_check"  placeholder="비밀번호 확인"  @input="validatePassword" />
       
       <!-- 비밀번호 불일치 메시지 -->
       <p v-if="passwordError" class="error">{{ passwordError }}</p>
+      <button type="button" :disabled="Boolean(passwordError)" @click="processSignup">회원가입</button>
 
-      <button type="submit" :disabled="passwordError">회원가입</button>
     </form>
   </div>
 </template>
 
 <script>
+import { useRoute } from 'vue-router';
 import axios from 'axios';
 
 export default {
@@ -24,9 +25,16 @@ export default {
       email: '',
       password: '',
       password_check: '',
+      emailError: '', // 이메일 중복 확인 에러
       passwordError: '', // 비밀번호 불일치 메시지 저장
     };
   },
+  setup() {
+        const route = useRoute();
+        return {
+            route
+        };
+    },
   methods: {
     validatePassword() {
       if (this.password !== this.password_check) {
@@ -35,23 +43,30 @@ export default {
         this.passwordError = '';
       }
     },
-    async handleSignup() {
+
+    async processSignup() {
       if (this.passwordError) {
         alert('비밀번호를 확인해주세요.');
         return;
       }
-
       try {
         const response = await axios.post('http://180.83.251.5:8080/api/signup', {
           email: this.email,
           password: this.password,
         });
-        alert(response.data);
+
+        if (response.data) {
+          alert(response.data);
+          this.$router.push("/signupsuccess"); // 회원가입 페이지로 이동
+        } else {
+          alert('회원가입 실패.. 확인 부탁');
+        }
       } catch (error) {
         console.error(error);
         alert('회원가입 실패');
       }
     },
+
   },
 };
 </script>
