@@ -6,20 +6,18 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://192.168.0.2:8080', // 백엔드 서버 주소
-        // target: 'http://180.83.251.5:8080',
+        target: 'http://localhost:8080', // 백엔드 서버 주소
         changeOrigin: true,
+        secure: true, // HTTPS로 통신할 때 필요한 설정
         rewrite: (path) => path.replace(/^\/api/, ''), // '/api'를 제거하여 요청
       },
     },
   },
   build: {
-    // 배포할 경로를 지정, 예: `/my-app/`로 설정하면 프로덕션에서 /my-app 경로에 배포됨
-    base: '/',
+    base: '/', // 배포할 경로를 지정
   },
   define: {
-    // 환경에 맞춰 API의 기본 URL을 설정
-    // __API_URL__: process.env.NODE_ENV === 'production' ? '"http://192.168.0.2:8080/messages"' : '"/api"',
-    __API_URL__: process.env.NODE_ENV === 'production' ? '"http://180.83.251.5:8080/messages"' : '"/api"',
+    // 프로덕션 환경에서 실제 API URL을 HTTPS로 설정
+    __API_URL__: process.env.NODE_ENV === 'production' ? '"https://coin-dashboard.xyz"' : '"/api"',
   },
 });

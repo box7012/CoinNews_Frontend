@@ -67,7 +67,7 @@ export default {
     async emailDuplicateCheck() {
     try {
       // 서버로 중복 체크 요청 전송
-      const response = await axios.post('http://180.83.251.5:8080/api/emailcheck', {
+      const response = await axios.post('/api/emailcheck', {
         email: this.email,
       });
 
@@ -107,7 +107,7 @@ export default {
         return;
       }
       try {
-        const response = await axios.post('http://180.83.251.5:8080/api/signup', {
+        const response = await axios.post('http://192.168.0.3:8080/api/signup', {
           email: this.email,
           password: this.password,
         });
