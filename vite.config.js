@@ -18,6 +18,7 @@ export default defineConfig({
   },
   define: {
     // 프로덕션 환경에서 실제 API URL을 HTTPS로 설정
-    __API_URL__: process.env.NODE_ENV === 'production' ? '"https://coin-dashboard.xyz"' : '"/api"',
+    // __API_URL__: process.env.NODE_ENV === 'production' ? '"https://coin-dashboard.xyz"' : '"/api"',
+    __API_URL__: process.env.NODE_ENV === 'production' ? '"http://localhost:8080"' : '"/api"',
   },
 });

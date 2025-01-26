@@ -1,112 +1,125 @@
+<!-- App.vue -->
 <template>
-  
-    <div id="app">
-      <router-view></router-view>
+  <div id="app">
+    <div class="menu-bar">
+      <div class="tab-menu">
+        <button v-for="(tab, index) in tabs" :key="index" :class="{ active: activeTab === tab }" @click="activeTab = tab">
+          {{ tab }}
+        </button>
+      </div>
       <button @click="showLoginModal = true" class="login-btn">로그인</button>
-      <LoginModal v-if="showLoginModal" :show="showLoginModal" @close="showLoginModal = false" />
-      <div class="grid">
-        <div class="frame-item">
-          <CoinMarketVue />
-        </div>
-        <div class="frame-item">
-          <CoinChartVue />
-        </div>
-        <div class="frame-item">
-          <CoinNewsVue />
-        </div>
-        <div class="frame-item">
-          <CoinNewsScrap />
-  
-        </div>
+    </div>
+
+    <LoginModal v-if="showLoginModal" :show="showLoginModal" @close="showLoginModal = false" />
+
+    <div class="grid">
+      <div v-if="activeTab === 'Dashboard'" class="frame-item">
+        <Dashboard />
+      </div>
+      <div v-if="activeTab === '코인 차트'" class="frame-item">
+        <CoinChartVue />
+      </div>
+      <div v-if="activeTab === '코인 뉴스'" class="frame-item">
+        <CoinNewsVue />
+      </div>
+      <div v-if="activeTab === '경제 지수'" class="frame-item">
+        <CommunityBoard />
       </div>
     </div>
-  </template>
-  
-  <script>
-  import CoinMarketVue from './CoinMarket.vue'
-  import CoinChartVue from './CoinChart.vue';
-  import CoinNewsVue from './CoinNews.vue'
-  import CoinNewsScrap from './CoinNewsScrap.vue';
-  import LoginModal from './LoginModal.vue';
-  
-  export default {
-    data() {
-      return {
-        showLoginModal: false,
-      }
-    },
-  
-    name: 'App',
-    components: {
-      CoinNewsVue,
-      CoinChartVue,
-      LoginModal,
-      CoinNewsScrap,
-      CoinMarketVue,
-    },
-  };
-  </script>
-  
-  <style>
-  #app {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 1h;
-    padding: 0 10px;
-    box-sizing: border-box; /* 패딩이 콘텐츠 크기에 포함되도록 설정 */
-    max-height: 900px;
-    max-width: 1180px; /* 최대 너비 제한 */
-    width:100%; /* 전체 너비의 90%로 설정 */
-    position: relative;
-  }
-  
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2열 레이아웃 */
-    grid-gap: 5px; /* 항목 간격 */
-    width: 100%; /* 그리드의 너비를 부모와 맞추기 */
-    height: 100%;
-    padding-top: 70px;
+  </div>
+</template>
+
+<script>
+import CoinMarketVue from './CoinMarket.vue';
+import CoinChartVue from './CoinChart.vue';
+import CoinNewsVue from './CoinNews.vue';
+import EconomyIndex from './EconomyIndex.vue';
+import LoginModal from './LoginModal.vue';
+import Dashboard from './Dashboard.vue';
+import CommunityBoard from './CommunityBoard.vue';
+
+
+
+export default {
+  components: {
     
-    
-  }
-  
-  .frame-item {
-    position: relative;
-    display: flex; /* 자식 요소의 정렬 조정 */
-    justify-content: flex-start; /* 수평 방향: 왼쪽 정렬 */
-    align-items: flex-start; /* 수직 방향: 위쪽 정렬 */
-    padding: 10px;
-    border: 1px solid #ccc; /* 확인용 테두리 */
-    border-radius: 10px;
-    height: 50vh; /* 화면 너비의 26%로 높이 설정 */
-    min-height: 250px;
-    max-height: 400px;
-    width: 50vw; /* 화면 너비의 32%로 너비 설정 */
-    max-width: 550px; /* 최대 너비 제한 */
-    min-width: 500px; /* 최소 너비 제한 */
-    overflow: hidden;
-    
-  }
-  
-  
-  .login-btn {
-    position: absolute; /* 부모 요소를 기준으로 위치 */
-    top: 20px; /* 상단에서 20px 위치 */
-    right: 20px; /* 오른쪽에서 20px 위치 */
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .login-btn:hover {
-    background-color: #0056b3; /* hover 시 색상 변경 */
-  }
-  
-  
-  </style>
+    Dashboard,
+    CoinMarketVue,
+    CoinChartVue,
+    CoinNewsVue,
+    EconomyIndex,
+    LoginModal,
+    CommunityBoard,
+  },
+  data() {
+    return {
+      showLoginModal: false,
+      tabs: ['Dashboard', '코인 차트', '코인 뉴스', '경제 지수'], // 탭 이름
+      activeTab: 'Dashboard', // 현재 선택된 탭
+    };
+  },
+};
+</script>
+
+<style scoped>
+/* 메뉴 바 스타일 */
+.menu-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* 상단 정렬 */
+  padding: 10px 20px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+}
+
+/* 탭 메뉴 스타일 */
+.tab-menu {
+  display: flex;
+  flex-direction: row; /* 가로 정렬 */
+  gap: 10px; /* 버튼 간격 */
+}
+
+.tab-menu button {
+  margin: 0;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.tab-menu button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+/* 로그인 버튼 스타일 */
+.login-btn {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+/* 그리드 스타일 */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin: 20px;
+}
+
+.frame-item {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+</style>

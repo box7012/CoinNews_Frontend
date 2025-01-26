@@ -23,6 +23,7 @@
 <script>
 
  import { useRoute } from 'vue-router';
+ import axios from 'axios';
  
  export default {
     props: {
@@ -30,6 +31,7 @@
     },
     data() {
       return {
+        email: '',
         username: '',
         password: '',
       };
@@ -43,10 +45,27 @@
     },
 
     methods: {
-      login() {
-        alert('로그인 성공!');
-        this.$emit('close');
+      async login() {
+        const email = this.email;
+        const password = this.password;
+
+        try {
+          const response = await axios.post("http://localhost:8080/auth/login",
+            email,
+            password
+          )
+
+          localStorage.setItem("authToken", response.data.token);
+          alert('로그인 성공!');
+          this.$emit('close');
+          this.$route.push('/')
+
+        } catch (error) {
+          console.error("Failed to send Login Information: ", error);
+          alert('로그인 실패.. 다시 시도해주세요.');
+        }
       },
+
       closeModal() {
         this.$emit('close');
       },

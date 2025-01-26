@@ -50,8 +50,8 @@ export default {
           return;
         }
 
-        // const response = await axios.post("https://coin-dashboard.xyz/api/news/search", {
-        const response = await axios.post("/api/news/search", {
+        // const response = await axios.post("/api/news/search", {
+        const response = await axios.post("/news/search", {
           query: this.searchQuery,
         });
 
@@ -69,7 +69,8 @@ export default {
     async loadMessages() {
       try {
         if (!this.searchQuery) { 
-          const response = await axios.get('/api/news');
+          // const response = await axios.get('/api/news');
+          const response = await axios.get('/news');
           // const response = await axios.get('http://192.168.0.3:8080/api/news');
           this.news = response.data.slice(-5);
         }
@@ -134,7 +135,7 @@ export default {
 
   /* 검색 바 스타일 */
   .search-bar {
-    position: absolute;
+    position: relative;
     right: 10px;
     display: flex; /* 수평 정렬 */
     justify-content: flex-end; /* 오른쪽 정렬 */
