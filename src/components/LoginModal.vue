@@ -5,13 +5,13 @@
         <form @submit.prevent="login">
           <div>
             <label for="username">아이디</label>
-            <input v-model="username" type="text" id="username" required />
+            <input v-model="email" type="text" id="username" required />
           </div>
           <div>
             <label for="password">비밀번호</label>
             <input v-model="password" type="password" id="password" required />
           </div>
-          <button type="submit">로그인</button>
+          <button type="button" @click="login">로그인</button>
           <button @click="goToSignUp" type="button"  class="signup-btn">회원가입</button>
           <button @click="closeModal" type="button">닫기</button>
         </form>
@@ -50,10 +50,14 @@
         const password = this.password;
 
         try {
-          const response = await axios.post("http://localhost:8080/auth/login",
-            email,
-            password
-          )
+          const response = await axios.post("http://localhost:8080/auth/login", {
+            email: email,
+            password: password,
+          }, {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
 
           localStorage.setItem("authToken", response.data.token);
           alert('로그인 성공!');
