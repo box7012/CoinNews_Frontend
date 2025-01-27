@@ -2,19 +2,12 @@
 <template>
   <div id="app">
 
-    <nav>
-      <span v-if="user">{{ user.email }}님, 환영합니다!</span>
-      <button v-if="!user" @click="showLoginModal = true">로그인</button>
-      <button v-if="user" @click="logout">로그아웃</button>
-    </nav>
-
     <div class="menu-bar">
       <div class="tab-menu">
         <button v-for="(tab, index) in tabs" :key="index" :class="{ active: activeTab === tab }" @click="activeTab = tab">
           {{ tab }}
         </button>
       </div>
-      <button @click="showLoginModal = true" class="login-btn">로그인</button>
     </div>
 
     <LoginModal v-if="showLoginModal" :show="showLoginModal" @close="showLoginModal = false" />
