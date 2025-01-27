@@ -60,9 +60,9 @@
           });
 
           localStorage.setItem("authToken", response.data.token);
+          this.$emit('user-logged-in', response.data.user); // 부모 컴포넌트에 사용자 정보 전달
           alert('로그인 성공!');
           this.$emit('close');
-          this.$route.push('/')
 
         } catch (error) {
           console.error("Failed to send Login Information: ", error);

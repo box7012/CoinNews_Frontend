@@ -1,6 +1,13 @@
 <!-- App.vue -->
 <template>
   <div id="app">
+
+    <nav>
+      <span v-if="user">{{ user.email }}님, 환영합니다!</span>
+      <button v-if="!user" @click="showLoginModal = true">로그인</button>
+      <button v-if="user" @click="logout">로그아웃</button>
+    </nav>
+
     <div class="menu-bar">
       <div class="tab-menu">
         <button v-for="(tab, index) in tabs" :key="index" :class="{ active: activeTab === tab }" @click="activeTab = tab">
@@ -56,8 +63,17 @@ export default {
       showLoginModal: false,
       tabs: ['Dashboard', '코인 차트', '코인 뉴스', '경제 지수'], // 탭 이름
       activeTab: 'Dashboard', // 현재 선택된 탭
+      user: null,
     };
   },
+
+  methods: {
+    logout() {
+      localStorage.removeItem("authToken");
+      this.user = null;
+    }
+  }
+
 };
 </script>
 
