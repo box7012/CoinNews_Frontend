@@ -1,5 +1,5 @@
 <template>
-    <nav>
+  <nav>
     <span v-if="user">{{ user.email }}님, 환영합니다!</span>
     <button v-if="!user" @click="showLoginModal = true">로그인</button>
     <button v-if="user" @click="logout">로그아웃</button>
@@ -28,16 +28,17 @@ export default {
   },
 
   methods: {
-
     handleUserLogin(user) {
+      console.log("로그인 성공, 사용자 정보:", user); // 사용자 정보 확인
       this.user = user; // 로그인한 사용자 정보 저장
     },
 
     logout() {
+      console.log("로그아웃 실행");
       localStorage.removeItem("authToken");
       this.user = null;
     },
-  }
+  },
 }
 
 
