@@ -5,8 +5,7 @@
     <button v-if="user" @click="logout">로그아웃</button>
   </nav>
   <router-view></router-view>
-  <LoginModal v-if="showLoginModal" @close="showLogin = false" @user-logged-in="handleUserLogin" />
-
+  <LoginModal v-if="showLoginModal" :show="showLoginModal" @close="showLoginModal = false" @user-logged-in="handleUserLogin" />
 </template>
 
 
