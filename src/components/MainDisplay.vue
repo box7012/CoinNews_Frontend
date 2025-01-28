@@ -93,28 +93,15 @@ export default {
   padding: 10px 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: white;
+  background-color: rgb(59, 175, 211);
   cursor: pointer;
 }
 
 .tab-menu button.active {
   background-color: #007bff;
   color: white;
-  border-color: #007bff;
-}
-
-/* 로그인 버튼 스타일 */
-.login-btn {
-  padding: 10px 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: white;
-  cursor: pointer;
-}
-
-.login-btn:hover {
-  background-color: #007bff;
-  color: white;
+  border-color: #010203;
+  border-width: 3px;
 }
 
 /* 그리드 스타일 */

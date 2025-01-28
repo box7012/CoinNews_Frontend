@@ -1,10 +1,19 @@
 <template>
-    <form @submit.prevent="addPost" class="form">
-        <input v-model="newPost.title" type="text" placeholder="제목" class="input" required />
-        <textarea v-model="newPost.content" placeholder="내용" class="textarea" required></textarea>
-        <button type="submit" class="button">등록</button>
-        <button type="button" @click="backToCommunityBoard" class="button">게시판으로</button>
+  <div>
+    <h2>게시글 작성</h2>
+    <form @submit.prevent="saveOpinion">
+      <div>
+        <label for="title">제목:</label>
+        <input v-model="newPost.title" id="title" required />
+      </div>
+      <div>
+        <label for="text">내용:</label>
+        <textarea v-model="newPost.text" id="text" rows="5" required></textarea>
+      </div>
+      <button type="submit">저장</button>
+      <button type="button" @click="backToCommunityBoard">취소</button>
     </form>
+  </div>
 </template>
 
 <script>
@@ -16,39 +25,65 @@ export default {
   data() {
     return {
       newPost: {
+        email: '',
         title: '',
-        content: ''
+        text: '',
+        create_date: '',
       },
       posts: []
     };
   },
   methods: {
-    goToWritePage() {
-      this.$router.push("writepage");
-    },
 
     backToCommunityBoard() {
         // this.$router.push("/");
         this.$router.go(-1); 
     },
 
-
-    async loadPosts() {
+    async saveOpinion() {
       try {
-          const response = await axios.get('/posts');
-          this.posts = response.data;
-      } catch (error) {
-          console.error("Failed to load Posts: ", error)
-      }
+        // 로컬 스토리지에서 인증 토큰 가져오기
+        const token = localStorage.getItem("authToken");
+        
+        if (!token) {
+          alert("로그인이 필요합니다!");
+          return;
+        }
 
-    }
+        // Post 요청 전송
+        const response = await axios.post(
+          "/api/posts",
+          {
+            email: this.newPost.email, // 작성자 이메일
+            title: this.newPost.title, // 제목
+            text: this.newPost.text,   // 내용
+            create_date: new Date().toISOString(), // 생성 날짜
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // 인증 토큰 헤더 추가
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        // 성공 시 처리
+        console.log("저장 완료:", response.data);
+        alert("저장이 완료되었습니다!");
+        this.newPost = {
+          email: '',
+          title: '',
+          text: '',
+          create_date: '',
+        };
+        this.backToCommunityBoard(); // 게시판으로 돌아가기
+      } catch (error) {
+        console.error("Failed to save Opinion: ", error);
+        alert("저장 실패.. 다시 시도해 주세요!");
+      }
+    },
 
   },
-
-  mounted() {
-      this.loadPosts();
-  }
-
 };
 </script>
 
