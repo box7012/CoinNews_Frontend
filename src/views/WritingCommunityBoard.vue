@@ -3,7 +3,7 @@
     <h2>게시글 작성</h2>
     <form @submit.prevent="saveOpinion">
       <div>
-        <label for="title">제목:</label>
+        <label for="title" aria-placeholder="제목을 입력 해주세요">제목:</label>
         <input v-model="newPost.title" id="title" required />
       </div>
       <div>
@@ -17,36 +17,43 @@
 </template>
 
 <script>
-
-import axios from 'axios';
-import { useRoute } from 'vue-router';
+import axios from "axios";
 
 export default {
   data() {
     return {
       newPost: {
-        email: '',
-        title: '',
-        text: '',
-        create_date: '',
+        email: "", // 로그인 사용자 이메일
+        title: "",
+        text: "",
+        create_date: "",
       },
-      posts: []
+      posts: [],
     };
   },
+  mounted() {
+    // 컴포넌트가 마운트될 때 로그인 사용자 이메일 설정
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user && user.email) {
+      this.newPost.email = user.email; // 이메일 필드에 자동 추가
+    }
+  },
   methods: {
-
     backToCommunityBoard() {
-        // this.$router.push("/");
-        this.$router.go(-1); 
+      this.$router.go(-1); // 이전 페이지로 이동
     },
 
     async saveOpinion() {
       try {
-        // 로컬 스토리지에서 인증 토큰 가져오기
         const token = localStorage.getItem("authToken");
-        
+
         if (!token) {
           alert("로그인이 필요합니다!");
+          return;
+        }
+
+        if (!this.newPost.text.trim()) {
+          alert("내용을 입력해주세요.");
           return;
         }
 
@@ -54,9 +61,9 @@ export default {
         const response = await axios.post(
           "/api/posts",
           {
-            email: this.newPost.email, // 작성자 이메일
+            email: this.newPost.email, // 로그인 사용자 이메일
             title: this.newPost.title, // 제목
-            text: this.newPost.text,   // 내용
+            text: this.newPost.text, // 내용
             create_date: new Date().toISOString(), // 생성 날짜
           },
           {
@@ -71,10 +78,10 @@ export default {
         console.log("저장 완료:", response.data);
         alert("저장이 완료되었습니다!");
         this.newPost = {
-          email: '',
-          title: '',
-          text: '',
-          create_date: '',
+          email: this.newPost.email, // 이메일은 유지
+          title: "",
+          text: "",
+          create_date: "",
         };
         this.backToCommunityBoard(); // 게시판으로 돌아가기
       } catch (error) {
@@ -82,10 +89,10 @@ export default {
         alert("저장 실패.. 다시 시도해 주세요!");
       }
     },
-
   },
 };
 </script>
+
 
 <style scoped>
 .board {

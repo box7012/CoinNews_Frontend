@@ -34,7 +34,7 @@
 
       async loadPosts() {
         try {
-            const response = await axios.get('/posts');
+            const response = await axios.get('/api/posts');
             this.posts = response.data;
         } catch (error) {
             console.error("Failed to load Posts: ", error)

@@ -45,41 +45,42 @@ export default {
 
   methods: {
     async login() {
-      const { email, password } = this;
+    const { email, password } = this;
 
-      try {
-        const response = await axios.post("/auth/login", {
-          email: email,
-          password: password,
-        }, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-
-        const token = response.data;  // 응답에서 직접 토큰을 받음
-        if (!token) {
-          throw new Error("토큰이 응답에 포함되지 않았습니다.");
+    try {
+      const response = await axios.post("/auth/login", {
+        email: email,
+        password: password,
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
         }
-
-        // 'Bearer '를 제거한 후 토큰을 디코딩
-        const cleanedToken = token.startsWith('Bearer ') ? token.slice(7) : token;
-        const decodedToken = VueJwtDecode.decode(cleanedToken); // JWT 토큰을 디코딩
-        console.log("Decoded Token:", decodedToken); // 디코딩된 내용 확인
-
-        const user = { email: decodedToken.sub }; // 사용자 정보 생성
-        localStorage.setItem("authToken", token); // JWT 토큰만 저장
-        this.$emit('user-logged-in', user); // 부모 컴포넌트로 사용자 정보 전달
-
-        alert('로그인 성공!');
-        this.$emit('close'); // 로그인 성공 후 모달 닫기
-
-      } catch (error) {
-        console.error("Failed to send Login Information: ", error);
-        alert('로그인 실패.. 다시 시도해주세요.');
+      });
+      
+      const token = response.data;  // 응답에서 직접 토큰을 받음
+      if (!token) {
+        throw new Error("토큰이 응답에 포함되지 않았습니다.");
       }
-    },
+      
+      // 'Bearer '를 제거한 후 토큰을 디코딩
+      const cleanedToken = token.startsWith('Bearer ') ? token.slice(7) : token;
+      
+      const decodedToken = VueJwtDecode.decode(cleanedToken); // JWT 토큰을 디코딩
+      console.log("Decoded Token:", decodedToken); // 디코딩된 내용 확인
+      
+      const user = { email: decodedToken.sub }; // 사용자 정보 생성
+      localStorage.setItem("authToken", token); // JWT 토큰만 저장
+      localStorage.setItem("user", JSON.stringify(user)); // 사용자 정보도 저장
+      this.$emit('user-logged-in', user); // 부모 컴포넌트로 사용자 정보 전달
 
+      alert('로그인 성공!');
+      this.$emit('close'); // 로그인 성공 후 모달 닫기
+
+    } catch (error) {
+      console.error("Failed to send Login Information: ", error);
+      alert('로그인 실패.. 다시 시도해주세요.');
+    }
+  },
     closeModal() {
       this.$emit('close');
     },

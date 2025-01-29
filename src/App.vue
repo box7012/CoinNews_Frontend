@@ -5,7 +5,7 @@
       <nav>
         <span v-if="user">{{ user.email }}님, 환영합니다!</span>
         <button v-if="!user" class="login-btn" @click="showLoginModal = true">로그인</button>
-        <button v-if="user" @click="logout">로그아웃</button>
+        <button v-if="user" class="login-btn" @click="logout">로그아웃</button>
       </nav>
     </div>
   </div>
