@@ -41,13 +41,19 @@ export default {
     logout() {
       console.log("로그아웃 실행");
       localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
       this.user = null;
     },
   },
+
+  mounted() {
+    const user = localStorage.getItem("user");
+    if (user) {
+      this.user = JSON.parse(user); // localStorage에서 사용자 정보 불러오기
+    }
+  }
+
 }
-
-
-
 
 </script>
 

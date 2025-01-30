@@ -16,13 +16,13 @@
       <div v-if="activeTab === 'Dashboard'" class="frame-item">
         <Dashboard />
       </div>
-      <div v-if="activeTab === '코인 차트'" class="frame-item">
-        <CoinChartVue />
+      <div v-if="activeTab === 'Back Testing'" class="frame-item">
+        <Backtesting />
       </div>
-      <div v-if="activeTab === '코인 뉴스'" class="frame-item">
+      <div v-if="activeTab === 'News'" class="frame-item">
         <CoinNewsVue />
       </div>
-      <div v-if="activeTab === '경제 지수'" class="frame-item">
+      <div v-if="activeTab === 'Community Board'" class="frame-item">
         <CommunityBoard />
       </div>
     </div>
@@ -37,6 +37,8 @@ import EconomyIndex from './EconomyIndex.vue';
 import LoginModal from './LoginModal.vue';
 import Dashboard from './Dashboard.vue';
 import CommunityBoard from './CommunityBoard.vue';
+import Backtesting from './Backtesting.vue';
+import Backtesting from './Backtesting.vue';
 
 
 
@@ -50,11 +52,12 @@ export default {
     EconomyIndex,
     LoginModal,
     CommunityBoard,
+    Backtesting,
   },
   data() {
     return {
       showLoginModal: false,
-      tabs: ['Dashboard', '코인 차트', '코인 뉴스', '경제 지수'], // 탭 이름
+      tabs: ['Dashboard', 'Back Testing', 'News', 'Community Board'], // 탭 이름
       activeTab: 'Dashboard', // 현재 선택된 탭
       user: null,
     };
