@@ -84,8 +84,17 @@
   <div>
     <button @click="sendAnalysisData">🕵️Analysis</button>
   </div>
-
 </div>
+
+  <div class="right-panel">
+    <!-- 로딩 중 화면 흐릿하게 -->
+    <div v-if="isLoading" class="loading-overlay">
+      <div class="loading-message">Loading...</div>
+    </div>
+    <div v-for="(imageBase64, index) in imageBase64List" :key="index">
+      <img :src="imageBase64" alt="Graph" />
+    </div>
+  </div>
 </div>
 </template>
 
@@ -110,6 +119,9 @@ export default {
 
       startDate: '',
       endDate: '',
+
+      imageBase64List: [],
+      isLoading: false,
 
     };
   },
@@ -160,6 +172,7 @@ export default {
 
     async sendAnalysisData() {
       try {
+        this.isLoading = true;
         const requestData = {
           tickers: this.selectedTickerList,
           strategies: this.selectedStrategyList,
@@ -171,12 +184,10 @@ export default {
           endDate: this.endDate,
         };
 
-        const response = await axios.post("http://localhost:8080", requestData);
-        console.log("📨 전송 완료:", response.data);
-        console.log("📤 보낸 데이터:", JSON.stringify(requestData, null, 2));
-        alert("✅ 분석 요청이 성공적으로 전송되었습니다!");
+        const response = await axios.post("http://192.168.0.2:8080/api/analysis", requestData);
+        this.imageBase64List = response.data.graphs.map(graph => "data:image/png;base64," + graph);
+        this.isLoading = false;
       } catch (error) {
-        console.error("❌ 분석 요청 실패:", error);
         alert("⚠️ 분석 요청 중 오류가 발생했습니다.");
       }
     },
@@ -253,4 +264,11 @@ button {
   font-weight: bold;
   text-align: center;
 }
+
+/* 분석 요청 버튼이 로딩 중일 때 비활성화 */
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 </style>

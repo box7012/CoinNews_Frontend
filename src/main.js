@@ -6,6 +6,6 @@ import axios from 'axios';
 
 // axios.defaults.withCredentials = true;
 
-// axios.defaults.baseURL = '/api';
+axios.defaults.baseURL = '/api';
 
 createApp(App).use(router).mount('#app');
