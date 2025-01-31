@@ -2,18 +2,23 @@
   <div>
     <div>
       <p>현재 포트폴리오 목록</p>
-      <p>{{ selectedTickerList }}</p>
+      <ul>
+        <li v-for="(ticker, index) in selectedTickerList" :key="index">
+          {{ ticker }}
+          <button @click="removeTicker(index)">x</button>
+        </li>
+      </ul>
     </div>
 
     <!-- 티커 선택 -->
     <label for="ticker">티커 선택:</label>
     <select v-model="selectedTicker" id="ticker" @change="addTicker">
+      <option value="" disabled selected>티커를 선택하세요</option>
       <option v-for="ticker in tickers" :key="ticker" :value="ticker">
         {{ ticker }}
       </option>
     </select>
   </div>
-
 
   <div>
     <button @click="addStrategy">전략 추가</button>
@@ -21,7 +26,9 @@
 
   <p>Strategy select</p>
   <div v-for="(strategy, index) in selectedStrategyList" :key="index">
+    <button @click="deleteStrategy(index)">x</button>
     <select v-model="strategy.selected" id="selectedStrategy">
+      <option value="" disabled selected>전략을 선택하세요</option>
       <option v-for="strategy in strategList" :key="strategy" :value="strategy">
         {{ strategy }}
       </option>
@@ -29,18 +36,25 @@
     <div v-if="strategy.selected === 'RSI'">
       <div>
         <label for="buy">Buy</label>
-        <input type="range" id="buy" v-model="buyValue" min="0" max="100" />
-        <span>{{ buyValue }}%</span>
+        <input type="range" id="buy" v-model="rsiBuyValue" min="0" max="100" />
+        <span>{{ rsiBuyValue }}%</span>
       </div>
       <div>
         <label for="sell">Sell</label>
-        <input type="range" id="sell" v-model="sellValue" min="0" max="100" />
-        <span>{{ sellValue }}%</span>
+        <input type="range" id="sell" v-model="rsiSellValue" min="0" max="100" />
+        <span>{{ rsiSellValue }}%</span>
       </div>
     </div>
     <div v-if="strategy.selected === 'Bollinger Band'">
       <div>
-        hi
+        <label for="buy">Buy</label>
+        <input type="range" id="buy" v-model="bollingerBuyValue" min="0" max="100" />
+        <span>{{ bollingerBuyValue }}%</span>
+      </div>
+      <div>
+        <label for="sell">Sell</label>
+        <input type="range" id="sell" v-model="bollingerSellValue" min="0" max="100" />
+        <span>{{ bollingerSellValue }}%</span>
       </div>
     </div>
   </div>
@@ -61,8 +75,12 @@ export default {
       selectedStrategy: '',
       strategList: ['RSI', 'Bollinger Band'],
       selectedStrategyList: [],
-      sellValue: 50, // Sell 값 (초기값 50%)
-      buyValue: 50,  // Buy 값 (초기값 50%)
+      rsiSellValue: 50, // Sell 값 (초기값 50%)
+      rsiBuyValue: 50,  // Buy 값 (초기값 50%)
+
+      bollingerBuyValue: 50,
+      bollingerSellValue: 50,
+
     };
   },
   mounted() {
@@ -71,11 +89,14 @@ export default {
 
   methods: {
 
+    deleteStrategy(index) {
+      this.selectedStrategyList.splice(index, 1);
+    },
+
     addStrategy() {
       this.selectedStrategyList.push({
         selected: '',
       })
-      console.log(this.selectedStrategyList);
     },
 
     // API에서 티커 목록을 가져오는 메서드
