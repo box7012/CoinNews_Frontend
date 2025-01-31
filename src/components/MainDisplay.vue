@@ -38,13 +38,9 @@ import LoginModal from './LoginModal.vue';
 import Dashboard from './Dashboard.vue';
 import CommunityBoard from './CommunityBoard.vue';
 import Backtesting from './Backtesting.vue';
-import Backtesting from './Backtesting.vue';
-
-
 
 export default {
   components: {
-    
     Dashboard,
     CoinMarketVue,
     CoinChartVue,

@@ -79,7 +79,7 @@ export default {
 
     startmessagePolling() {
       this.loadMessages();
-      setInterval(this.loadMessages, 10000); // 10초
+      setInterval(this.loadMessages, 600000); // 10초
     },
 
     formatDate(dateString) {
