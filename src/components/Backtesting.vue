@@ -93,8 +93,8 @@
   </div>
 
   <div class="right-panel">
-      <div>
-      <h2>Backtest Results</h2>
+    <div v-for="(result, tickerIndex) in backtestResults" :key="tickerIndex">
+      <h2>Backtest Results - {{ result[0]?.ticker || 'Unknown' }}</h2>
       <table border="1">
         <thead>
           <tr>
@@ -103,23 +103,17 @@
             <th>RSI</th>
             <th>매수 신호</th>
             <th>매도 신호</th>
-            <!-- <th>개장가</th> -->
             <th>거래가</th>
-            <!-- <th>저가</th> -->
-            <!-- <th>고가</th> -->
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in backtestResults" :key="index">
+          <tr v-for="(item, index) in result" :key="index">
             <td>{{ formatDate(item.timestamp) }}</td>
             <td>{{ item.ticker }}</td>
             <td>{{ item.rsi }}</td>
             <td>{{ item.buySignal || 'N/A' }}</td>
             <td>{{ item.sellSignal || 'N/A' }}</td>
-            <!-- <td>{{ item.openingPrice }}</td> -->
             <td>{{ item.tradePrice }}</td>
-            <!-- <td>{{ item.lowPrice }}</td> -->
-            <!-- <td>{{ item.highPrice }}</td> -->
           </tr>
         </tbody>
       </table>
