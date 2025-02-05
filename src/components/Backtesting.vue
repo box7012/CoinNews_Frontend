@@ -3,7 +3,6 @@
 <div class="container">
   <div class="left-panel">
 
-  <div>
     <div>
       <h3>📌 포트폴리오 목록</h3>
       <div class="ticker-list">
@@ -23,48 +22,46 @@
         {{ ticker }}
       </option>
     </select>
-  </div>
 
-  <div>
-    <button @click="addStrategy">전략 추가</button>
-  </div>
+    <div>
+      <button @click="addStrategy">전략 추가</button>
+    </div>
 
-  <p>Strategy select</p>
-  <div v-for="(strategy, index) in selectedStrategyList" :key="index">
-    <select v-model="strategy.selected" id="selectedStrategy">
-      <option value="" disabled selected>전략을 선택하세요</option>
-      <option v-for="strategy in strategList" :key="strategy" :value="strategy">
-        {{ strategy }}
-      </option>
-    </select>
-    <button @click="deleteStrategy(index)">x</button>
-    <div v-if="strategy.selected === 'RSI'">
-      <div>
-        <label for="buy">Buy</label>
-        <input type="range" id="buy" v-model="rsiBuyValue" min="0" max="100" />
-        <span>{{ rsiBuyValue }}%</span>
+    <p>Strategy select</p>
+    <div v-for="(strategy, index) in selectedStrategyList" :key="index">
+      <select v-model="strategy.selected" id="selectedStrategy">
+        <option value="" disabled selected>전략을 선택하세요</option>
+        <option v-for="strategy in strategList" :key="strategy" :value="strategy">
+          {{ strategy }}
+        </option>
+      </select>
+      <button @click="deleteStrategy(index)">x</button>
+      <div v-if="strategy.selected === 'RSI'">
+        <div>
+          <label for="buy">Buy</label>
+          <input type="range" id="buy" v-model="rsiBuyValue" min="0" max="100" />
+          <span>{{ rsiBuyValue }}%</span>
+        </div>
+        <div>
+          <label for="sell">Sell</label>
+          <input type="range" id="sell" v-model="rsiSellValue" min="0" max="100" />
+          <span>{{ rsiSellValue }}%</span>
+        </div>
       </div>
-      <div>
-        <label for="sell">Sell</label>
-        <input type="range" id="sell" v-model="rsiSellValue" min="0" max="100" />
-        <span>{{ rsiSellValue }}%</span>
+      <div v-if="strategy.selected === 'Bollinger Band'">
+        <div>
+          <label for="buy">Buy</label>
+          <input type="range" id="buy" v-model="bollingerBuyValue" min="0" max="100" />
+          <span>{{ bollingerBuyValue }}%</span>
+        </div>
+        <div>
+          <label for="sell">Sell</label>
+          <input type="range" id="sell" v-model="bollingerSellValue" min="0" max="100" />
+          <span>{{ bollingerSellValue }}%</span>
+        </div>
       </div>
     </div>
-    <div v-if="strategy.selected === 'Bollinger Band'">
-      <div>
-        <label for="buy">Buy</label>
-        <input type="range" id="buy" v-model="bollingerBuyValue" min="0" max="100" />
-        <span>{{ bollingerBuyValue }}%</span>
-      </div>
-      <div>
-        <label for="sell">Sell</label>
-        <input type="range" id="sell" v-model="bollingerSellValue" min="0" max="100" />
-        <span>{{ bollingerSellValue }}%</span>
-      </div>
-    </div>
-  </div>
 
-  <div>
     <p>Period</p>
     <!-- 날짜 선택 -->
     <div class="date-picker">
@@ -75,24 +72,58 @@
       <input type="date" id="endDate" v-model="endDate" />
     </div>
 
+
         <!-- 선택한 날짜 표시 -->
     <div class="selected-dates">
       <p>📆 선택한 기간: <strong>{{ startDate }} ~ {{ endDate }}</strong></p>
     </div>
+
+    <div>
+      <button @click="sendAnalysisData">🕵️Analysis</button>
+    </div>
   </div>
 
-  <div>
-    <button @click="sendAnalysisData">🕵️Analysis</button>
-  </div>
-</div>
-
-  <div class="right-panel">
+  <div class="center-panel">
     <!-- 로딩 중 화면 흐릿하게 -->
     <div v-if="isLoading" class="loading-overlay">
       <div class="loading-message">Loading...</div>
     </div>
     <div v-for="(imageBase64, index) in imageBase64List" :key="index">
       <img :src="imageBase64" alt="Graph" />
+    </div>
+  </div>
+
+  <div class="right-panel">
+      <div>
+      <h2>Backtest Results</h2>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>티커</th>
+            <th>RSI</th>
+            <th>매수 신호</th>
+            <th>매도 신호</th>
+            <th>개장가</th>
+            <th>거래가</th>
+            <th>저가</th>
+            <th>고가</th>
+            <th>시간</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in backtestResults" :key="index">
+            <td>{{ item.ticker }}</td>
+            <td>{{ item.rsi }}</td>
+            <td>{{ item.buySignal || 'N/A' }}</td>
+            <td>{{ item.sellSignal || 'N/A' }}</td>
+            <td>{{ item.openingPrice }}</td>
+            <td>{{ item.tradePrice }}</td>
+            <td>{{ item.lowPrice }}</td>
+            <td>{{ item.highPrice }}</td>
+            <td>{{ formatDate(item.time) }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -122,6 +153,8 @@ export default {
 
       imageBase64List: [],
       isLoading: false,
+
+      backtestResults: [],
 
     };
   },
@@ -185,7 +218,9 @@ export default {
         };
 
         const response = await axios.post("http://192.168.0.2:8080/api/analysis", requestData);
+        // const response = await axios.post("https://coin-dashboard.xyz/api/analysis", requestData);
         this.imageBase64List = response.data.graphs.map(graph => "data:image/png;base64," + graph);
+        this.backtestResults = response.data.backtestResults;
         this.isLoading = false;
       } catch (error) {
         alert("⚠️ 분석 요청 중 오류가 발생했습니다.");
@@ -199,7 +234,7 @@ export default {
 /* 화면을 1:2 비율로 나누는 Grid */
 .container {
   display: grid;
-  grid-template-columns: 1fr 2fr; /* 왼쪽:오른쪽 = 1:2 비율 */
+  grid-template-columns: 1fr 2fr 1fr; /* 왼쪽:오른쪽 = 1:2 비율 */
   gap: 20px;
   padding: 20px;
   height: 100vh;
@@ -214,11 +249,18 @@ export default {
 }
 
 /* 오른쪽 패널 스타일 */
+.center-panel {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
 .right-panel {
   background-color: #ffffff;
   padding: 20px;
   border-radius: 10px;
 }
+
 
 /* 티커 리스트 스타일 */
 .ticker-list {
