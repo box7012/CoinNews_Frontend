@@ -1,5 +1,4 @@
 <template>
-
 <div class="container">
   <div class="left-panel">
 
@@ -99,28 +98,28 @@
       <table border="1">
         <thead>
           <tr>
+            <th>시간</th>
             <th>티커</th>
             <th>RSI</th>
             <th>매수 신호</th>
             <th>매도 신호</th>
-            <th>개장가</th>
+            <!-- <th>개장가</th> -->
             <th>거래가</th>
-            <th>저가</th>
-            <th>고가</th>
-            <th>시간</th>
+            <!-- <th>저가</th> -->
+            <!-- <th>고가</th> -->
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in backtestResults" :key="index">
+            <td>{{ formatDate(item.timestamp) }}</td>
             <td>{{ item.ticker }}</td>
             <td>{{ item.rsi }}</td>
             <td>{{ item.buySignal || 'N/A' }}</td>
             <td>{{ item.sellSignal || 'N/A' }}</td>
-            <td>{{ item.openingPrice }}</td>
+            <!-- <td>{{ item.openingPrice }}</td> -->
             <td>{{ item.tradePrice }}</td>
-            <td>{{ item.lowPrice }}</td>
-            <td>{{ item.highPrice }}</td>
-            <td>{{ formatDate(item.time) }}</td>
+            <!-- <td>{{ item.lowPrice }}</td> -->
+            <!-- <td>{{ item.highPrice }}</td> -->
           </tr>
         </tbody>
       </table>
@@ -163,6 +162,11 @@ export default {
   },
 
   methods: {
+    formatDate(timestamp) {
+      if (!timestamp) return "N/A";
+      const date = new Date(timestamp);
+      return date.toISOString().split("T")[0]; // "YYYY-MM-DD" 형식으로 변환
+    },
 
     deleteStrategy(index) {
       this.selectedStrategyList.splice(index, 1);
@@ -220,7 +224,7 @@ export default {
         const response = await axios.post("http://192.168.0.2:8080/api/analysis", requestData);
         // const response = await axios.post("https://coin-dashboard.xyz/api/analysis", requestData);
         this.imageBase64List = response.data.graphs.map(graph => "data:image/png;base64," + graph);
-        this.backtestResults = response.data.backtestResults;
+        this.backtestResults = response.data.backtestresult[0];
         this.isLoading = false;
       } catch (error) {
         alert("⚠️ 분석 요청 중 오류가 발생했습니다.");
@@ -234,7 +238,8 @@ export default {
 /* 화면을 1:2 비율로 나누는 Grid */
 .container {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr; /* 왼쪽:오른쪽 = 1:2 비율 */
+  border: 1px solid red; /* 확인용 */
+  grid-template-columns: 1fr 4fr 2fr; /* 왼쪽:오른쪽 = 1:2 비율 */
   gap: 20px;
   padding: 20px;
   height: 100vh;
