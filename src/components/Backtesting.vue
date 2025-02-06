@@ -93,7 +93,7 @@
   </div>
 
   <div class="right-panel">
-    <div v-for="(result, tickerIndex) in backtestResults" :key="tickerIndex">
+    <div v-for="(result, tickerIndex) in backTestHistory" :key="tickerIndex">
       <h2>Backtest Results - {{ result[0]?.ticker || 'Unknown' }}</h2>
       <table border="1">
         <thead>
@@ -147,7 +147,9 @@ export default {
       imageBase64List: [],
       isLoading: false,
 
-      backtestResults: [],
+      backTestHistory: [],
+
+      backTestResults: [],
 
     };
   },
@@ -218,7 +220,8 @@ export default {
         const response = await axios.post("http://192.168.0.2:8080/api/analysis", requestData);
         // const response = await axios.post("https://coin-dashboard.xyz/api/analysis", requestData);
         this.imageBase64List = response.data.graphs.map(graph => "data:image/png;base64," + graph);
-        this.backtestResults = response.data.backtestresult[0];
+        this.backTestHistory = response.data.backTestHistory;
+        // this.backtestResults = response.data.backtestresult;
         this.isLoading = false;
       } catch (error) {
         alert("⚠️ 분석 요청 중 오류가 발생했습니다.");
