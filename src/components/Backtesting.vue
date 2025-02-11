@@ -93,6 +93,26 @@
   </div>
 
   <div class="right-panel">
+
+    <div>
+      <h2>Final Value List</h2>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>코인</th>
+            <th>값</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in finalValueList" :key="index">
+            <td>{{ Object.keys(item)[0] }}</td>
+            <td>{{ Object.values(item)[0].toFixed(2) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
     <div v-for="(result, tickerIndex) in backTestHistory" :key="tickerIndex">
       <h2>Backtest Results - {{ result[0]?.ticker || 'Unknown' }}</h2>
       <table border="1">
@@ -150,6 +170,8 @@ export default {
       backTestHistory: [],
 
       backTestResults: [],
+
+      finalValueList: [],
 
     };
   },
@@ -221,6 +243,7 @@ export default {
         // const response = await axios.post("https://coin-dashboard.xyz/api/analysis", requestData);
         this.imageBase64List = response.data.graphs.map(graph => "data:image/png;base64," + graph);
         this.backTestHistory = response.data.backTestHistory;
+        this.finalValueList = response.data.finalValueList;
         // this.backtestResults = response.data.backtestresult;
         this.isLoading = false;
       } catch (error) {

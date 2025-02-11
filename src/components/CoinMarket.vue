@@ -1,165 +1,203 @@
 <template>
-    <div class="container">
-      <h1 class="title">Crypto Dashboard</h1>
+  <div class="container">
+    <!-- <h1 class="title">Crypto Dashboard</h1> -->
 
-      <table class="crypto-table">
-        <thead>
-          <tr>
-            <th>이름</th>
-            <th>현재 가격 (USD)</th>
-            <th>24시간 거래량 (USD)</th>
-            <th>24시간 변동 (%)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="coin in coins" :key="coin.id">
-            <td class="coin-name">{{ coin.name }}</td>
-            <td class="coin-price">${{ coin.current_price.toLocaleString() }}</td>
-            <td class="coin-volume">${{ coin.total_volume.toLocaleString() }}</td>
-            <td class="coin-price-change" :style="{ color: coin.price_change_percentage_24h > 0 ? 'green' : 'red' }">
-              {{ coin.price_change_percentage_24h.toFixed(2) }}%
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- 검색 입력창 -->
+    <div class="search-container">
+      <input
+        type="text"
+        v-model="searchQuery"
+        placeholder="코인 검색"
+        class="search-box"
+        @focus="showDropdown = true"
+        @blur="hideDropdown"
+      />
+      <!-- 자동완성 목록 -->
+      <ul v-if="showDropdown && filteredCoins.length" class="dropdown">
+        <li v-for="coin in filteredCoins" :key="coin.id" @click="selectCoin(coin)">
+          {{ coin.name }}
+        </li>
+      </ul>
     </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    data() {
-      return {
-        coins: []
-      };
+
+    <table class="crypto-table">
+      <colgroup>
+        <col style="width: 30%;" />
+        <col style="width: 20%;" />
+        <col style="width: 30%;" />
+        <col style="width: 20%;" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th>코인명</th>
+          <th @click="sortTable('current_price')" class="sortable">
+            현재 가격 (USD)
+            <span v-if="sortBy === 'current_price'">
+              {{ sortOrder === 'asc' ? '▲' : sortOrder ===  'desc'? '▼' : '' }}
+            </span>
+          </th>
+          <th @click="sortTable('total_volume')" class="sortable">
+            24시간 거래량 (USD)
+            <span v-if="sortBy === 'total_volume'">
+              {{ sortOrder === 'asc' ? '▲' : sortOrder === 'desc'? '▼' : '' }}
+            </span>
+          </th>
+          <th @click="sortTable('price_change_percentage_24h')" class="sortable">
+            24시간 변동 (%)
+            <span v-if="sortBy === price_change_percentage_24h">
+              {{ sortOrder === 'asc' ? '▲' : sortOrder === 'desc' ? '▼' : '' }}
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="coin in displayedCoins" :key="coin.id">
+          <td>{{ coin.name }}</td>
+          <td>${{ coin.current_price.toLocaleString() }}</td>
+          <td>${{ coin.total_volume.toLocaleString() }}</td>
+          <td :style="{ color: coin.price_change_percentage_24h > 0 ? 'green' : 'red' }">
+            {{ coin.price_change_percentage_24h.toFixed(2) }}%
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      coins: [],
+      searchQuery: "",
+      showDropdown: false,
+      sortBy: null,
+      sortOrder: null,
+    };
+  },
+
+  computed: {
+    sortedCoins() {
+      if (!this.sortBy || !this.sortOrder) return this.coins;
+      return [...this.coins].sort((a, b) => {
+        const valueA = a[this.sortBy];
+        const valueB = b[this.sortBy];
+
+        return this.sortOrder === "asc" ? valueA - valueB : valueB - valueA;
+      });
     },
-  
-    methods: {
-      async fetchCryptoData() {
-        try {
-          const response = await axios.get(
-            'https://api.coingecko.com/api/v3/coins/markets',
-            {
-              params: {
-                vs_currency: 'usd', // USD 기준
-                order: 'market_cap_desc', // 시가총액 기준 내림차순
-                per_page: 10, // 최대 10개의 코인만 표시
-                page: 1,
-                sparkline: false // 스파크라인 데이터 제외
-              }
-            }
-          );
-          this.coins = response.data;
-        } catch (error) {
-          console.error('Error fetching crypto data:', error);
-          alert('데이터를 가져오는 데 실패했습니다.');
+
+    filteredCoins() {
+      if (!this.searchQuery) return [];
+      return this.sortedCoins.filter((coin) =>
+        coin.name.toLowerCase().startsWith(this.searchQuery.toLowerCase())
+      );
+    },
+
+    displayedCoins() {
+      return this.searchQuery ? this.filteredCoins : this.sortedCoins;
+    },
+  },
+
+  methods: {
+    sortTable(column) {
+      if (this.sortBy === column) {
+        if (this.sortOrder === "asc") {
+          this.sortOrder = "desc";
+        } else if (this.sortOrder === "desc") {
+          this.sortBy = null;
+          this.sortOrder = null;
         }
+      } else {
+        this.sortBy = column;
+        this.sortOrder = "asc";
       }
     },
-  
-    mounted() {
-      this.fetchCryptoData(); // 페이지 로드 시 데이터 가져오기
-    }
-  };
-  </script>
-  
-  <style scoped>
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .title {
-    text-align: center;
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  .refresh-btn {
-    display: block;
-    margin: 0 auto;
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .refresh-btn:hover {
-    background-color: #45a049;
-  }
-  
-  .crypto-table {
-    width: 100%;
-    overflow-y: auto;
-    margin-top: 20px;
-    max-height: 400px; /* 테이블 최대 높이 설정 */
-    border-collapse: collapse;
-    margin-top: 20px;
-    
-  }
-  
-  .crypto-table th,
-  .crypto-table td {
-    padding: 5px;
-    text-align: center;
-    border: 1px solid #ddd;
-    text-overflow: ellipsis; /* 긴 내용 생략(...) 표시 */
-    font-size: 1rem;
-  }
-  
-  .crypto-table th {
-    background-color: #f4f4f4;
-    color: #333;
-  }
-  
-  .crypto-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .crypto-table tbody tr:nth-child(odd) {
-    background-color: #fff;
-  }
-  
-  .crypto-table tbody tr:hover {
-    background-color: #f1f1f1;
-  }
-  
-  .crypto-table td {
-    color: #555;
-  }
-  
-  .crypto-table td:nth-child(4) {
-    font-weight: bold;
-  }
 
-.coin-name {
-width: 15%; /* 선택 열 폭 조정 */
+    async fetchCryptoData() {
+      try {
+        const response = await axios.get(
+          "https://api.coingecko.com/api/v3/coins/markets",
+          {
+            params: {
+              vs_currency: "usd",
+              order: "market_cap_desc",
+              per_page: 50,
+              page: 1,
+              sparkline: false,
+            },
+          }
+        );
+        this.coins = response.data;
+      } catch (error) {
+        console.error("Error fetching crypto data:", error);
+      }
+    },
+
+    selectCoin(coin) {
+      this.searchQuery = coin.name;
+      this.showDropdown = false;
+    },
+
+    hideDropdown() {
+      setTimeout(() => {
+        this.showDropdown = false;
+      }, 200);
+    },
+  },
+
+  mounted() {
+    this.fetchCryptoData();
+  },
+};
+</script>
+
+<style scoped>
+.search-container {
+  position: relative;
+  width: 100%;
 }
 
-.coin-price {
-width: 15%; /* 제목 열 폭 조정 */
+.search-box {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
 }
 
-.coin-volume {
-width: 45%; /* 날짜 열 폭 조정 */
+/* 자동완성 드롭다운 */
+.dropdown {
+  position: absolute;
+  width: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 1000;
 }
 
-.coin-price-change {
-width: 25%; /* 링크 열 폭 조정 */
+.dropdown li {
+  padding: 8px;
+  cursor: pointer;
 }
 
+.dropdown li:hover {
+  background: lightgray;
+}
 
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
 
-  </style>
-  
+.sortable:hover {
+  background-color: #f5f5f5;
+}
+</style>
