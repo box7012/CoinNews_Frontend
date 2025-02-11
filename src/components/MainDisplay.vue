@@ -38,9 +38,11 @@ import LoginModal from './LoginModal.vue';
 import Dashboard from './Dashboard.vue';
 import CommunityBoard from './CommunityBoard.vue';
 import Backtesting from './Backtesting.vue';
+import CoinNewsRealTime from './CoinNewsRealTime.vue';
 
 export default {
   components: {
+    CoinNewsRealTime,
     Dashboard,
     CoinMarketVue,
     CoinChartVue,
@@ -53,7 +55,7 @@ export default {
   data() {
     return {
       showLoginModal: false,
-      tabs: ['Dashboard', 'Back Testing', 'News', 'Community Board'], // 탭 이름
+      tabs: ['Dashboard', 'Back Testing', 'CoinNewsRealTime', 'Community Board'], // 탭 이름
       activeTab: 'Dashboard', // 현재 선택된 탭
       user: null,
     };
