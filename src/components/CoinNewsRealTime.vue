@@ -1,33 +1,23 @@
 <template>
     <div>
-      <div class="header">
-        <h1>뉴스</h1>
-        <div class="search-bar">
-          <input v-model="searchQuery" placeholder="검색어를 입력하세요" />
-          <button @click="searchNews">검색</button>
-          <button @click="deleteSearchQuery">x</button>
+      <div class="header"></div>
+  
+      <div v-for="information in news" :key="information.id" class="news-item">
+        <!-- 시간 표시 -->
+        <div class="news-time">{{ formatDate(information.date) }}</div>
+  
+        <!-- 제목과 내용 -->
+        <div class="news-title">
+          <a :href="information.link" target="_blank" rel="noopener noreferrer">
+            <strong>{{ information.title }}</strong>
+          </a>
+        </div>
+  
+        <!-- 앞부분 30글자만 회색으로 표시 -->
+        <div class="news-preview">
+          <span class="preview-text">{{ information.title.substring(0, 30) }}...</span>
         </div>
       </div>
-  
-      <table class="news-table">
-        <thead>
-          <tr>
-            <th>선택</th>
-            <th>제목</th>
-            <th>날짜</th>
-            <th>링크</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="information in news" :key="information.id">
-            <td><input type="checkbox" :value="information.id" v-model="selectedIds" /></td>
-            <td class="title-column">{{ information.title }}</td>
-            <td class="date-column">{{ formatDate(information.date) }}</td>
-            <td class="link-column"><a :href="information.link" target="_blank" rel="noopener noreferrer">링크</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </template>
   
@@ -43,28 +33,7 @@
     },
   
     methods: {
-      async searchNews() {
-        try {
-          if (!this.searchQuery.trim()) {
-            alert("검색어를 입력하세요.");
-            return;
-          }
-  
-          const response = await axios.post("/api/news/search", {
-            query: this.searchQuery,
-          });
-  
-          this.news = response.data.slice(-5);
-        } catch (error) {
-          console.error("검색 실패 : ", error);
-        }
-      },
-  
-      deleteSearchQuery() {
-        this.searchQuery = "";
-        this.loadMessages();
-      },
-  
+
       async loadMessages() {
         try {
           if (!this.searchQuery) { 
@@ -84,16 +53,15 @@
   
       formatDate(dateString) {
         const date = new Date(dateString);
-        return date.toLocaleString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false // 24시간 포맷 사용
-        }).replace(',', '').replace('/', '-').replace('/', '-');
-      },
-  
+            return date.toLocaleString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false, // 24시간 포맷 사용
+            }).replace(',', '').replace('/', '-').replace('/', '-');
+        },
     },
   
     mounted() {

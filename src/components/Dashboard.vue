@@ -7,7 +7,7 @@
         <CoinChartVue />
       </div>
       <div class="dashboard-frame-item">
-        <CoinNewsVue />
+        <CoinNewsRealTime />
       </div>
       <div class="dashboard-frame-item">
         <EconomyIndex />
@@ -18,14 +18,14 @@
   <script>
   import CoinMarketVue from './CoinMarket.vue';
   import CoinChartVue from './CoinChart.vue';
-  import CoinNewsVue from './CoinNews.vue';
+  import CoinNewsRealTime from './CoinNewsRealTime.vue';
   import EconomyIndex from './EconomyIndex.vue';
   
   export default {
     components: {
       CoinMarketVue,
       CoinChartVue,
-      CoinNewsVue,
+      CoinNewsRealTime,
       EconomyIndex,
     },
   };

@@ -20,7 +20,7 @@
         <Backtesting />
       </div>
       <div v-if="activeTab === 'News'" class="frame-item">
-        <CoinNewsVue />
+        <CoinNews />
       </div>
       <div v-if="activeTab === 'Community Board'" class="frame-item">
         <CommunityBoard />
@@ -31,22 +31,20 @@
 
 <script>
 import CoinMarketVue from './CoinMarket.vue';
+import CoinNews from './CoinNews.vue';
 import CoinChartVue from './CoinChart.vue';
-import CoinNewsVue from './CoinNews.vue';
 import EconomyIndex from './EconomyIndex.vue';
 import LoginModal from './LoginModal.vue';
 import Dashboard from './Dashboard.vue';
 import CommunityBoard from './CommunityBoard.vue';
 import Backtesting from './Backtesting.vue';
-import CoinNewsRealTime from './CoinNewsRealTime.vue';
 
 export default {
   components: {
-    CoinNewsRealTime,
+    CoinNews,
     Dashboard,
     CoinMarketVue,
     CoinChartVue,
-    CoinNewsVue,
     EconomyIndex,
     LoginModal,
     CommunityBoard,
@@ -55,7 +53,7 @@ export default {
   data() {
     return {
       showLoginModal: false,
-      tabs: ['Dashboard', 'Back Testing', 'CoinNewsRealTime', 'Community Board'], // 탭 이름
+      tabs: ['Dashboard', 'Back Testing', 'News', 'Community Board'], // 탭 이름
       activeTab: 'Dashboard', // 현재 선택된 탭
       user: null,
     };
