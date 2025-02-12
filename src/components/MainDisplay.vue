@@ -22,9 +22,9 @@
       <div v-if="activeTab === 'News'" class="frame-item">
         <CoinNews />
       </div>
-      <div v-if="activeTab === 'Community Board'" class="frame-item">
+      <!-- <div v-if="activeTab === 'Community Board'" class="frame-item">
         <CommunityBoard />
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -53,7 +53,8 @@ export default {
   data() {
     return {
       showLoginModal: false,
-      tabs: ['Dashboard', 'Back Testing', 'News', 'Community Board'], // 탭 이름
+      // tabs: ['Dashboard', 'Back Testing', 'News', 'Community Board'], // 탭 이름
+      tabs: ['Dashboard', 'Back Testing', 'News'], // 탭 이름
       activeTab: 'Dashboard', // 현재 선택된 탭
       user: null,
     };

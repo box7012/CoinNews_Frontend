@@ -24,10 +24,10 @@
 
     <table class="crypto-table">
       <colgroup>
-        <col style="width: 20%;" />
+        <col style="width: 18%;" />
+        <col style="width: 28%;" />
         <col style="width: 30%;" />
-        <col style="width: 30%;" />
-        <col style="width: 20%;" />
+        <col style="width: 24%;" />
       </colgroup>
       <thead>
         <tr>
@@ -39,14 +39,14 @@
             </span>
           </th>
           <th @click="sortTable('total_volume')" class="sortable">
-            24시간 거래량 (USD)
+            24h 거래량 (USD)
             <span v-if="sortBy === 'total_volume'">
               {{ sortOrder === 'asc' ? '▲' : sortOrder === 'desc'? '▼' : '' }}
             </span>
           </th>
           <th @click="sortTable('price_change_percentage_24h')" class="sortable">
-            24시간 변동 (%)
-            <span v-if="sortBy === price_change_percentage_24h">
+            24h 변동 (%)
+            <span v-if="sortBy === 'price_change_percentage_24h'">
               {{ sortOrder === 'asc' ? '▲' : sortOrder === 'desc' ? '▼' : '' }}
             </span>
           </th>
@@ -54,7 +54,12 @@
       </thead>
       <tbody>
         <tr v-for="coin in displayedCoins" :key="coin.id">
-          <td @click="selectCoin(coin)">{{ coin.name }}</td>
+          <td
+            @click="selectCoin(coin)"
+            :class="{'selected-coin': coin.id === selectedCoin?.id}"
+          >
+            {{ coin.name }}
+          </td>
           <td>${{ coin.current_price.toLocaleString() }}</td>
           <td>${{ coin.total_volume.toLocaleString() }}</td>
           <td :style="{ color: coin.price_change_percentage_24h > 0 ? 'green' : 'red' }">
@@ -149,7 +154,8 @@ export default {
     },
 
     selectCoin(coin) {
-      this.updateSelectedCoin = coin.name;
+      this.selectedCoin = coin; // 선택된 코인 정보 저장
+      this.updateSelectedCoin(coin.name);
       this.searchQuery = coin.name;
       this.showDropdown = false;
     },
@@ -176,6 +182,42 @@ export default {
 </script>
 
 <style scoped>
+
+/* 테이블 스타일 */
+.crypto-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px; /* 테이블 간격 */
+  background-color: #fff; /* 배경색 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 테이블 그림자 */
+  border-radius: 10px; /* 모서리 둥글게 */
+}
+
+.crypto-table th, .crypto-table td {
+  padding: 12px 20px; /* 셀 내부 여백 */
+  text-align: left;
+  font-size: 16px; /* 글자 크기 */
+  border-bottom: 1px solid #f1f1f1; /* 셀 하단 테두리 */
+}
+
+.crypto-table th {
+  background-color: #f9f9f9; /* 헤더 배경 */
+  font-weight: bold;
+}
+
+.crypto-table tr:hover {
+  background-color: #f4f4f4; /* 호버시 배경색 */
+}
+
+.coin-row {
+  cursor: pointer; /* 클릭 가능한 느낌 */
+}
+
+.coin-row:hover {
+  background-color: #f1f1f1; /* 클릭 시 배경색 */
+}
+
+
 .search-container {
   position: relative;
   width: 100%;
@@ -255,6 +297,12 @@ export default {
 
 .clear-button:hover {
   color: black;
+}
+
+.selected-coin {
+  border: 2px solid #FFD700; /* 노란색 테두리 추가 */
+  padding: 5px; /* 테두리 여백 */
+  background-color: #f5f5f5; /* 선택된 배경색 */
 }
 
 </style>

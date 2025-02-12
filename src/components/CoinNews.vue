@@ -4,30 +4,33 @@
       <h1>뉴스</h1>
       <div class="search-bar">
         <input v-model="searchQuery" placeholder="검색어를 입력하세요" />
-        <button @click="searchNews">검색</button>
-        <button @click="deleteSearchQuery">x</button>
+        <button @click="searchNews" class="search-button">🔍</button>
+        <button @click="deleteSearchQuery" class="clear-button">❌</button>
       </div>
     </div>
 
-    <table class="news-table">
-      <thead>
-        <tr>
-          <th>선택</th>
-          <th>제목</th>
-          <th>날짜</th>
-          <th>링크</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="information in news" :key="information.id">
-          <td><input type="checkbox" :value="information.id" v-model="selectedIds" /></td>
-          <td class="title-column">{{ information.title }}</td>
-          <td class="date-column">{{ formatDate(information.date) }}</td>
-          <td class="link-column"><a :href="information.link" target="_blank" rel="noopener noreferrer">링크</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="news-container">
+      <div v-for="information in news" :key="information.id" class="news-item">
+        <!-- 시간 부분을 컬럼처럼 처리 -->
+        <div class="news-time-column">
+          <div class="news-time">{{ formatDate(information.date) }}</div>
+        </div>
+
+        <!-- 제목과 내용 -->
+        <div class="news-details">
+          <div class="news-title">
+            <a :href="information.link" target="_blank" rel="noopener noreferrer">
+              <strong>{{ information.title }}</strong>
+            </a>
+          </div>
+
+          <!-- 앞부분 100글자만 회색으로 표시 -->
+          <div class="news-preview">
+            <span class="preview-text">{{ information.title.substring(0, 100) }}...</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -70,7 +73,7 @@ export default {
         if (!this.searchQuery) { 
           const response = await axios.get('/api/news');
           // const response = await axios.get('http://192.168.0.3:8080/api/news');
-          this.news = response.data.slice(-5);
+          this.news = response.data.slice(-40);
         }
       } catch (error) {
         console.error("Failed to load Messages: ", error);
@@ -103,127 +106,137 @@ export default {
 </script>
 
 <style scoped>
-
-  .news-list {
-    list-style-type: none; /* 기본 점 기호 제거 */
-    padding-left: 0; /* 기본 여백 제거 */
-    text-align: left; /* 왼쪽 정렬 */
-  }
-
-  .news-list li {
-    margin-bottom: 10px; /* 항목 간격 */
-  }
-
-  /* 전체 컨테이너 */
-  .header {
-    display: flex; /* 수평 정렬 */
-    justify-content: space-between; /* 양 끝 정렬 */
-    align-items: center; /* 세로 중앙 정렬 */
-    width: 100%; /* 부모의 너비에 맞게 */
-  }
-
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    font-weight: bold;
-    color: #4C91F1;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    white-space: nowrap;
-  }
-
-  /* 검색 바 스타일 */
-  .search-bar {
-    position: relative;
-    right: 10px;
-    display: flex; /* 수평 정렬 */
-    justify-content: flex-end; /* 오른쪽 정렬 */
-    align-items: center; /* 버튼과 입력 필드 높이 정렬 */
-    gap: 8px; /* 입력 필드와 버튼 사이 간격 */
-  }
-
-  input {
-    padding: 8px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    flex: 1; /* 입력 필드가 늘어나도록 */
-  }
-
-  button {
-    background-color: #4C91F1;
-    color: white;
-    border: none;
-    padding: 2px 8px;
-    font-size: 1.1rem;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    line-height: normal;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    white-space: nowrap;
-  }
-
-  button:hover {
-    background-color: #3b7cd7;
-    transform: translateY(-4px);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
-  }
-
-  button:active {
-    transform: translateY(2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
-
-  .news-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+/* 전체 레이아웃 정리 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 2px solid #ddd;
 }
 
-.news-table th,
-.news-table td {
-  padding: 5px;
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-bar input {
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex: 1;
+}
+
+.search-button,
+.clear-button {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 2px solid black;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-button:hover,
+.clear-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.search-button:active,
+.clear-button:active {
+  transform: scale(0.9);
+}
+
+input {
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 200px;
+}
+
+button {
+  background-color: #4C91F1;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background-color: #3b7cd7;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+.news-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .news-time-column {
+    width: 150px; /* 고정된 시간 컬럼 */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start; /* 시간 텍스트 왼쪽 정렬 */
+    padding-right: 20px;
+    border-right: 2px solid #ddd;
+  }
+  .news-item {
+  display: flex;
+  align-items: center; /* 세로로 중앙 정렬 */
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+}
+
+.news-time {
+  width: 120px; /* 시간 부분 너비 지정 */
+  font-size: 14px;
+  color: #777;
   text-align: center;
-  border: 1px solid #ddd;
 }
 
-.news-table th {
-  background-color: #f4f4f4;
+.news-details {
+  flex: 1; /* 남은 공간을 차지 */
+  padding-left: 15px;
+  text-align: left;
 }
 
-.news-table td a {
-  color: #007bff;
-  text-decoration: none;
+.news-title {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: left;
+
+}
+  
+.news-title a {
+  color: #000000; /* 노란색 */
+  text-decoration: none; /* 링크 밑줄 제거 */
 }
 
-.news-table td a:hover {
-  text-decoration: underline;
+.news-title a:hover {
+  color: #aa4e4e; /* 클릭 시 보라색 */
 }
-
-.news-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.news-table tbody tr:hover {
-  background-color: #f1f1f1;
-}
-
-
-.select-column {
-  width: 10%; /* 선택 열 폭 조정 */
-}
-
-.title-column {
-  width: 60%; /* 제목 열 폭 조정 */
-}
-
-.date-column {
-  width: 20%; /* 날짜 열 폭 조정 */
-}
-
-.link-column {
-  width: 10%; /* 링크 열 폭 조정 */
-}
-
+  .news-preview {
+    font-size: 14px;
+    color: #6f6f6f;
+  }
+  
+  .preview-text {
+    font-size: 14px;
+    color: #6f6f6f;
+  }
 
 </style>

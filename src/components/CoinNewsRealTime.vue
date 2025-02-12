@@ -2,20 +2,26 @@
     <div>
       <div class="header"></div>
   
-      <div v-for="information in news" :key="information.id" class="news-item">
-        <!-- 시간 표시 -->
-        <div class="news-time">{{ formatDate(information.date) }}</div>
+      <div class="news-container">
+        <div v-for="information in news" :key="information.id" class="news-item">
+          <!-- 시간 부분을 컬럼처럼 처리 -->
+          <div class="news-time-column">
+            <div class="news-time">{{ formatDate(information.date) }}</div>
+          </div>
   
-        <!-- 제목과 내용 -->
-        <div class="news-title">
-          <a :href="information.link" target="_blank" rel="noopener noreferrer">
-            <strong>{{ information.title }}</strong>
-          </a>
-        </div>
+          <!-- 제목과 내용 -->
+          <div class="news-details">
+            <div class="news-title">
+              <a :href="information.link" target="_blank" rel="noopener noreferrer">
+                <strong>{{ information.title }}</strong>
+              </a>
+            </div>
   
-        <!-- 앞부분 30글자만 회색으로 표시 -->
-        <div class="news-preview">
-          <span class="preview-text">{{ information.title.substring(0, 30) }}...</span>
+            <!-- 앞부분 100글자만 회색으로 표시 -->
+            <div class="news-preview">
+              <span class="preview-text">{{ information.title.substring(0, 100) }}...</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -23,28 +29,52 @@
   
   <script>
   import axios from 'axios';
+  import { mapGetters } from 'vuex';
   
   export default {
     data() {
       return {
-        searchQuery: "",
         news: [],
       };
     },
-  
+
+    computed: {
+    ...mapGetters(['getSelectedCoin']), // Vuex에서 선택된 코인 가져오기
+    },
+
+    watch: {
+        getSelectedCoin: {
+          immediate: true, // 컴포넌트가 처음 마운트될 때도 실행
+          handler(newCoin) {
+            console.log("new coin selected :", newCoin);
+            if (newCoin) {
+              this.loadMessages(newCoin); // 선택된 코인에 맞는 뉴스 가져오기
+            }
+          },
+        },
+    },
+    
     methods: {
 
-      async loadMessages() {
+        
+      async loadMessages(newCoin) {
         try {
-          if (!this.searchQuery) { 
-            const response = await axios.get('/api/news');
-            // const response = await axios.get('http://192.168.0.3:8080/api/news');
-            this.news = response.data.slice(-5);
+          let response;
+          
+          if (!newCoin) {
+            response = await axios.get('/api/news'); // 코인이 선택되지 않았을 때 기본 뉴스 호출
+          } else {
+            response = await axios.get('/api/news/search', {
+              params: { query: newCoin }, // 선택된 코인으로 뉴스 검색
+            });
           }
+          
+          this.news = response.data.slice(-5); // 최신 5개 뉴스 저장
         } catch (error) {
           console.error("Failed to load Messages: ", error);
         }
       },
+
   
       startmessagePolling() {
         this.loadMessages();
@@ -53,15 +83,15 @@
   
       formatDate(dateString) {
         const date = new Date(dateString);
-            return date.toLocaleString('ko-KR', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false, // 24시간 포맷 사용
-            }).replace(',', '').replace('/', '-').replace('/', '-');
-        },
+        return date.toLocaleString('ko-KR', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false, // 24시간 포맷 사용
+        }).replace(',', '').replace('/', '-').replace('/', '-');
+      },
     },
   
     mounted() {
@@ -71,128 +101,63 @@
   </script>
   
   <style scoped>
-  
-    .news-list {
-      list-style-type: none; /* 기본 점 기호 제거 */
-      padding-left: 0; /* 기본 여백 제거 */
-      text-align: left; /* 왼쪽 정렬 */
-    }
-  
-    .news-list li {
-      margin-bottom: 10px; /* 항목 간격 */
-    }
-  
-    /* 전체 컨테이너 */
-    .header {
-      display: flex; /* 수평 정렬 */
-      justify-content: space-between; /* 양 끝 정렬 */
-      align-items: center; /* 세로 중앙 정렬 */
-      width: 100%; /* 부모의 너비에 맞게 */
-    }
-  
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      font-weight: bold;
-      color: #4C91F1;
-      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-      white-space: nowrap;
-    }
-  
-    /* 검색 바 스타일 */
-    .search-bar {
-      position: relative;
-      right: 10px;
-      display: flex; /* 수평 정렬 */
-      justify-content: flex-end; /* 오른쪽 정렬 */
-      align-items: center; /* 버튼과 입력 필드 높이 정렬 */
-      gap: 8px; /* 입력 필드와 버튼 사이 간격 */
-    }
-  
-    input {
-      padding: 8px;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      flex: 1; /* 입력 필드가 늘어나도록 */
-    }
-  
-    button {
-      background-color: #4C91F1;
-      color: white;
-      border: none;
-      padding: 2px 8px;
-      font-size: 1.1rem;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      line-height: normal;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-      white-space: nowrap;
-    }
-  
-    button:hover {
-      background-color: #3b7cd7;
-      transform: translateY(-4px);
-      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
-    }
-  
-    button:active {
-      transform: translateY(2px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-  
-    .news-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+  .news-container {
+    display: flex;
+    flex-direction: column;
   }
   
-  .news-table th,
-  .news-table td {
-    padding: 5px;
-    text-align: center;
-    border: 1px solid #ddd;
+  .news-time-column {
+    width: 150px; /* 고정된 시간 컬럼 */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start; /* 시간 텍스트 왼쪽 정렬 */
+    padding-right: 20px;
+    border-right: 2px solid #ddd;
+  }
+  .news-item {
+  display: flex;
+  align-items: center; /* 세로로 중앙 정렬 */
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+}
+
+.news-time {
+  width: 120px; /* 시간 부분 너비 지정 */
+  font-size: 14px;
+  color: #777;
+  text-align: center;
+}
+
+.news-details {
+  flex: 1; /* 남은 공간을 차지 */
+  padding-left: 15px;
+  text-align: left;
+}
+
+.news-title {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: left;
+
+}
+  
+.news-title a {
+  color: #000000; /* 노란색 */
+  text-decoration: none; /* 링크 밑줄 제거 */
+}
+
+.news-title a:hover {
+  color: #aa4e4e; /* 클릭 시 보라색 */
+}
+  .news-preview {
+    font-size: 14px;
+    color: #6f6f6f;
   }
   
-  .news-table th {
-    background-color: #f4f4f4;
+  .preview-text {
+    font-size: 14px;
+    color: #6f6f6f;
   }
-  
-  .news-table td a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .news-table td a:hover {
-    text-decoration: underline;
-  }
-  
-  .news-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .news-table tbody tr:hover {
-    background-color: #f1f1f1;
-  }
-  
-  
-  .select-column {
-    width: 10%; /* 선택 열 폭 조정 */
-  }
-  
-  .title-column {
-    width: 60%; /* 제목 열 폭 조정 */
-  }
-  
-  .date-column {
-    width: 20%; /* 날짜 열 폭 조정 */
-  }
-  
-  .link-column {
-    width: 10%; /* 링크 열 폭 조정 */
-  }
-  
-  
   </style>
   
