@@ -62,14 +62,10 @@
       async loadMessages(newCoin) {
         try {
           let response;
-          
-          console.log("📌 loadMessages 실행 | newCoin:", newCoin, "| 타입:", typeof newCoin);
-
+                
           if (!newCoin) {
-            console.log("✅ newCoin이 falsy 값(null, undefined, '')이라 기본 뉴스 호출");
             response = await axios.get('/api/news');
           } else {
-            console.log("🔍 newCoin으로 검색 실행:", newCoin);
             response = await axios.post('/api/news/search', {
               query: newCoin,
             });

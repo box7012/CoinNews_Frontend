@@ -1,26 +1,5 @@
 <template>
   <div>
-    <!-- 시간 간격과 티커를 선택할 수 있는 입력 필드 -->
-    <div>
-      <label for="timeInterval">12시간 간격:</label>
-      <select v-model="timeInterval" id="timeInterval">
-        <option value="5">5분</option>
-        <option value="10">10분</option>
-        <option value="20">20분</option>
-        <option value="30">30분</option>
-      </select>
-    </div>
-
-    <div>
-      <label for="market">티커:</label>
-      <select v-model="market" id="market">
-        <option value="KRW-BTC">BTC</option>
-        <option value="KRW-ETH">ETH</option>
-        <option value="KRW-XRP">XRP</option>
-        <!-- 필요한 만큼 옵션 추가 -->
-      </select>
-    </div>
-
     <!-- 차트 -->
     <canvas id="ohlcChart"></canvas>
   </div>
@@ -29,50 +8,82 @@
 <script>
 import { Chart, registerables } from 'chart.js';
 import { CandlestickController, CandlestickElement } from 'chartjs-chart-financial';
+import { mapGetters } from 'vuex';
 import axios from 'axios';
 import 'chartjs-adapter-date-fns';
 
 Chart.register(...registerables);
 Chart.register(CandlestickController, CandlestickElement);
 
+
 export default {
   name: 'CoinChart',
   data() {
     return {
       chartData: [], // 차트 데이터를 담을 변수
-      timeInterval: '5', // 기본 시간 간격 5분
-      market: 'KRW-BTC', // 기본 티커 KRW-BTC (Bitcoin)
+      // timeInterval: '5', // 기본 시간 간격 5분
+      // market: 'KRW-BTC', // 기본 티커 KRW-BTC (Bitcoin)
       chart: null, // 차트 객체를 저장할 변수
     };
   },
   mounted() {
     this.fetchData(); // 컴포넌트가 마운트되면 데이터를 가져옵니다.
   },
+
+  computed: {
+    ...mapGetters(['getSelectedCoin']), // Vuex에서 선택된 코인 가져오기
+
+    formatChangedSelectedCoin() {
+      return this.getSelectedCoin // Vuex에서 가져온 값 사용
+        ? this.getSelectedCoin.toLowerCase().replace(/\s+/g, '-')
+        : 'bitcoin';
+    },
+  },
+
   watch: {
-    // 시간 간격 또는 티커가 변경될 때마다 데이터 새로 가져오기
+    getSelectedCoin() {
+      this.fetchData();
+    },
+
     timeInterval() {
       this.fetchData();
     },
+
     market() {
       this.fetchData();
     },
+
   },
   methods: {
+
+
+    coinNameFormatChange(coinName) {
+      return coinName.toLowerCase().replace(/\s+/g, '-');
+    },
+
     async fetchData() {
       try {
         // 선택된 시간 간격과 티커로 API 요청
-        const response = await axios.get(`https://api.upbit.com/v1/candles/minutes/${this.timeInterval}?market=${this.market}&count=20`);
+        const response = await axios.get(
+          `https://api.coingecko.com/api/v3/coins/${this.formatChangedSelectedCoin}/ohlc?vs_currency=usd&days=365`,
+          {
+            headers: {
+              Accept: "application/json",
+              "x-cg-api-key": import.meta.env.VITE_CG_API_KEY,
+            },
+          }
+        );
 
         if (response.data && Array.isArray(response.data)) {
           const data = response.data;
 
-          // API에서 받은 데이터를 차트 형식에 맞게 변환
+          // API에서 받은 배열 데이터를 차트 형식으로 변환
           const formattedData = data.map(item => ({
-            x: new Date(item.candle_date_time_kst),  // KST 시간으로 변환
-            o: item.opening_price,                    // 시가
-            h: item.high_price,                       // 고가
-            l: item.low_price,                        // 저가
-            c: item.trade_price                       // 종가
+            x: new Date(item[0]),  // timestamp를 Date 객체로 변환
+            o: item[1],            // 시가
+            h: item[2],            // 고가
+            l: item[3],            // 저가
+            c: item[4]             // 종가
           }));
 
           // 차트 데이터 갱신
@@ -105,7 +116,7 @@ export default {
               backgroundColor: 'rgba(0, 128, 0, 0.3)', // 상승 캔들의 배경색
               hoverBackgroundColor: 'rgba(0, 128, 0, 0.5)', // 호버 시 배경색
               hoverBorderColor: 'rgba(0, 128, 0, 1)',
-              barThickness: 10, // 캔들스틱의 너비 설정
+              barThickness: 5, // 캔들스틱의 너비 설정
             },
           ],
         },
@@ -120,7 +131,7 @@ export default {
             x: {
               type: 'time',
               time: {
-                unit: 'minute', // 분 단위로 설정
+                unit: 'day', // 분 단위로 설정
               },
               ticks: {
                 autoSkip: true,
