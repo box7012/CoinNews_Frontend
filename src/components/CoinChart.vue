@@ -2,7 +2,7 @@
   <div>
     <!-- 시간 간격과 티커를 선택할 수 있는 입력 필드 -->
     <div>
-      <label for="timeInterval">시간 간격:</label>
+      <label for="timeInterval">12시간 간격:</label>
       <select v-model="timeInterval" id="timeInterval">
         <option value="5">5분</option>
         <option value="10">10분</option>

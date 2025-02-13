@@ -31,7 +31,7 @@
     data() {
       return {
         coins: [],
-        tabs: ["h1", "h2", "h3"]
+
       };
     },
   

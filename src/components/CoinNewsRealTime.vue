@@ -39,19 +39,21 @@
     },
 
     computed: {
-    ...mapGetters(['getSelectedCoin']), // Vuex에서 선택된 코인 가져오기
+      ...mapGetters(['getSelectedCoin']), // Vuex에서 선택된 코인 가져오기
     },
 
     watch: {
-        getSelectedCoin: {
-          immediate: true, // 컴포넌트가 처음 마운트될 때도 실행
-          handler(newCoin) {
-            console.log("new coin selected :", newCoin);
-            if (newCoin) {
-              this.loadMessages(newCoin); // 선택된 코인에 맞는 뉴스 가져오기
-            }
-          },
+      getSelectedCoin: {
+        immediate: true,  // 컴포넌트가 처음 마운트될 때도 실행
+        handler(newCoin) {
+          console.log("new coin selected:", newCoin);
+          if (newCoin) {
+            this.loadMessages(newCoin);  // 선택된 코인에 맞는 뉴스 가져오기
+          } else {
+            this.loadMessages();  // 코인이 없으면 기본 뉴스 가져오기
+          }
         },
+      },
     },
     
     methods: {
@@ -61,19 +63,24 @@
         try {
           let response;
           
+          console.log("📌 loadMessages 실행 | newCoin:", newCoin, "| 타입:", typeof newCoin);
+
           if (!newCoin) {
-            response = await axios.get('/api/news'); // 코인이 선택되지 않았을 때 기본 뉴스 호출
+            console.log("✅ newCoin이 falsy 값(null, undefined, '')이라 기본 뉴스 호출");
+            response = await axios.get('/api/news');
           } else {
-            response = await axios.get('/api/news/search', {
-              params: { query: newCoin }, // 선택된 코인으로 뉴스 검색
+            console.log("🔍 newCoin으로 검색 실행:", newCoin);
+            response = await axios.post('/api/news/search', {
+              query: newCoin,
             });
           }
           
-          this.news = response.data.slice(-5); // 최신 5개 뉴스 저장
+          this.news = response.data.slice(-5);
         } catch (error) {
-          console.error("Failed to load Messages: ", error);
+          console.error("❌ Failed to load Messages: ", error);
         }
       },
+
 
   
       startmessagePolling() {

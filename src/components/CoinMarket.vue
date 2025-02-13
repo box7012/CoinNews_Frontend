@@ -80,6 +80,7 @@ export default {
     return {
       coins: [],
       searchQuery: "",
+      selectedCoin: null,
       showDropdown: false,
       sortBy: null,
       sortOrder: null,
@@ -87,11 +88,6 @@ export default {
   },
 
   computed: {
-
-    clearSearch() {
-      this.searchQuery = "";
-      this.showDropdown = false;
-    },
 
     sortedCoins() {
       if (!this.sortBy || !this.sortOrder) return this.coins;
@@ -118,6 +114,20 @@ export default {
   methods: {
 
     ...mapActions(["updateSelectedCoin"]),
+
+    clearSearch() {
+      // selectedCoin은 null로 설정
+      this.selectedCoin = null;
+
+      // searchQuery 초기화
+      this.searchQuery = null;
+
+      // 드롭다운 숨기기
+      this.showDropdown = false;
+
+      // Vuex 상태도 업데이트 (선택된 코인 없음)
+      this.updateSelectedCoin(null);
+    },
 
     sortTable(column) {
       if (this.sortBy === column) {
@@ -153,12 +163,28 @@ export default {
       }
     },
 
+    // 코인 선택 또는 선택 해제
     selectCoin(coin) {
-      this.selectedCoin = coin; // 선택된 코인 정보 저장
-      this.updateSelectedCoin(coin.name);
-      this.searchQuery = coin.name;
-      this.showDropdown = false;
+      if (this.selectedCoin && this.selectedCoin.id === coin.id) {
+        // 이미 선택된 코인을 다시 클릭하면 null로 설정
+        this.selectedCoin = null;
+        this.updateSelectedCoin(null);
+      } else {
+        // 코인 선택
+        this.selectedCoin = coin;
+        this.updateSelectedCoin(coin.name);
+      }
     },
+
+    // ESC 키 눌렀을 때 selectedCoin을 null로 설정
+    handleKeydown(event) {
+      if (event.key === "Escape") {
+        this.selectedCoin = null;
+        this.updateSelectedCoin(null);
+      }
+    },
+
+
 
     hideDropdown() {
       setTimeout(() => {
@@ -177,7 +203,14 @@ export default {
 
   mounted() {
     this.fetchCryptoData();
+    window.addEventListener("keydown", this.handleKeydown);
   },
+
+  beforeDestroy() {
+    // 컴포넌트가 제거되기 전에 이벤트 리스너 제거
+    window.removeEventListener("keydown", this.handleKeydown);
+  },
+
 };
 </script>
 
