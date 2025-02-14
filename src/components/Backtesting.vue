@@ -49,14 +49,36 @@
       </div>
       <div v-if="strategy.selected === 'Bollinger Band'">
         <div>
+          hi bollinger band
+        </div>
+      </div>
+      <div v-if="strategy.selected === 'MACD'">
+        <div>
+          hi MACD
+        </div>
+      </div>
+      <div v-if="strategy.selected === 'Psychological Line'">
+        <div>
           <label for="buy">Buy</label>
-          <input type="range" id="buy" v-model="bollingerBuyValue" min="0" max="100" />
-          <span>{{ bollingerBuyValue }}%</span>
+          <input type="range" id="buy" v-model="PsychologicalBuyValue" min="0" max="100" />
+          <span>{{ PsychologicalBuyValue }}%</span>
         </div>
         <div>
           <label for="sell">Sell</label>
-          <input type="range" id="sell" v-model="bollingerSellValue" min="0" max="100" />
-          <span>{{ bollingerSellValue }}%</span>
+          <input type="range" id="sell" v-model="PsychologicalSellValue" min="0" max="100" />
+          <span>{{ PsychologicalSellValue }}%</span>
+        </div>
+      </div>
+      <div v-if="strategy.selected === 'CCI'">
+        <div>
+          <label for="buy">Buy</label>
+          <input type="range" id="buy" v-model="CCIBuyValue" min="-200" max="200" />
+          <span>{{ CCIBuyValue }}%</span>
+        </div>
+        <div>
+          <label for="sell">Sell</label>
+          <input type="range" id="sell" v-model="CCISellValue" min="-200" max="200" />
+          <span>{{ CCISellValue }}%</span>
         </div>
       </div>
     </div>
@@ -153,13 +175,16 @@ export default {
       selectedTickerList: [],  // 선택된 티커 목록
 
       selectedStrategy: '',
-      strategList: ['RSI', 'Bollinger Band'],
+      strategList: ['RSI', 'Bollinger Band', 'MACD', 'Psychological Line', 'CCI'],
       selectedStrategyList: [],
       rsiSellValue: 50, // Sell 값 (초기값 50%)
       rsiBuyValue: 50,  // Buy 값 (초기값 50%)
 
-      bollingerBuyValue: 50,
-      bollingerSellValue: 50,
+      CCIBuyValue: 0,
+      CCISellValue: 0,
+
+      PsychologicalBuyValue: 50,
+      PsychologicalSellValue: 50,
 
       startDate: '',
       endDate: '',
@@ -233,7 +258,8 @@ export default {
           strategies: this.selectedStrategyList,
           parameters: {
             RSI: { buy: this.rsiBuyValue, sell: this.rsiSellValue },
-            BollingerBand: { buy: this.bollingerBuyValue, sell: this.bollingerSellValue },
+            CCI: { buy: this.CCIBuyValue, sell: this.CCISellValue },
+            "Psychological Line": { buy: this.PsychologicalBuyValue, sell: this.PsychologicalSellValue },
           },
           startDate: this.startDate,
           endDate: this.endDate,

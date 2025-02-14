@@ -56,7 +56,7 @@ export default {
 .dashboard-grid {
   display: grid;
   grid-template-columns: 700px 800px; /* 좌측 300px, 우측 500px */
-  grid-template-rows: 400px 400px; /* 각 행 높이 400px 고정 */
+  grid-template-rows: 450px 500px; /* 각 행 높이 400px 고정 */
   gap: 10px;
   height: 100vh; /* 전체 높이 설정 */
 }
