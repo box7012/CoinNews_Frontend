@@ -24,14 +24,16 @@
 
     <table class="crypto-table">
       <colgroup>
-        <col style="width: 18%;" />
-        <col style="width: 28%;" />
+        <col style="width: 8%;" />
+        <col style="width: 12%;" />
+        <col style="width: 25%;" />
         <col style="width: 30%;" />
-        <col style="width: 24%;" />
+        <col style="width: 25%;" />
       </colgroup>
       <thead>
         <tr>
-          <th>코인명</th>
+          <th></th>
+          <th>코인</th>
           <th @click="sortTable('current_price')" class="sortable">
             현재 가격 (USD)
             <span v-if="sortBy === 'current_price'">
@@ -53,13 +55,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="coin in displayedCoins" :key="coin.id">
-          <td
-            @click="selectCoin(coin)"
-            :class="{'selected-coin': coin.id === selectedCoin?.id}"
-          >
-            {{ coin.name }}
+        <tr 
+          v-for="coin in displayedCoins" 
+          :key="coin.id" 
+          @click="selectCoin(coin)"
+          :class="{'selected-coin': coin.id === selectedCoin?.id}"
+        >
+          <td>
+            <img :src="coin.image" alt="Coin Image" style="width: 25px; height: 25px;" />
           </td>
+          <td>{{ coin.name }}</td>
           <td>${{ coin.current_price.toLocaleString() }}</td>
           <td>${{ coin.total_volume.toLocaleString() }}</td>
           <td :style="{ color: coin.price_change_percentage_24h > 0 ? 'green' : 'red' }">
@@ -151,9 +156,9 @@ export default {
             params: {
               vs_currency: "usd",
               order: "market_cap_desc",
-              per_page: 50,
-              page: 1,
-              sparkline: false,
+              // per_page: 50,
+              // page: 1,
+              // sparkline: false,
             },
           }
         );
@@ -172,7 +177,7 @@ export default {
       } else {
         // 코인 선택
         this.selectedCoin = coin;
-        this.updateSelectedCoin(coin.name);
+        this.updateSelectedCoin(coin.id);
       }
     },
 
@@ -218,6 +223,7 @@ export default {
 
 /* 테이블 스타일 */
 .crypto-table {
+  table-layout: fixed;
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 10px; /* 테이블 간격 */
@@ -333,9 +339,9 @@ export default {
 }
 
 .selected-coin {
-  border: 2px solid #FFD700; /* 노란색 테두리 추가 */
-  padding: 5px; /* 테두리 여백 */
-  background-color: #f5f5f5; /* 선택된 배경색 */
+  background-color: rgba(255, 215, 0, 0.2); /* 옅은 노란색 배경 */
+  transition: background-color 0.3s ease-in-out;
 }
+
 
 </style>
