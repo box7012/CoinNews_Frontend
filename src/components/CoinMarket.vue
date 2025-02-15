@@ -21,58 +21,59 @@
         </li>
       </ul>
     </div>
-
-    <table class="crypto-table">
-      <colgroup>
-        <col style="width: 8%;" />
-        <col style="width: 12%;" />
-        <col style="width: 25%;" />
-        <col style="width: 30%;" />
-        <col style="width: 25%;" />
-      </colgroup>
-      <thead>
-        <tr>
-          <th></th>
-          <th>코인</th>
-          <th @click="sortTable('current_price')" class="sortable">
-            현재 가격 (USD)
-            <span v-if="sortBy === 'current_price'">
-              {{ sortOrder === 'asc' ? '▲' : sortOrder ===  'desc'? '▼' : '' }}
-            </span>
-          </th>
-          <th @click="sortTable('total_volume')" class="sortable">
-            24h 거래량 (USD)
-            <span v-if="sortBy === 'total_volume'">
-              {{ sortOrder === 'asc' ? '▲' : sortOrder === 'desc'? '▼' : '' }}
-            </span>
-          </th>
-          <th @click="sortTable('price_change_percentage_24h')" class="sortable">
-            24h 변동 (%)
-            <span v-if="sortBy === 'price_change_percentage_24h'">
-              {{ sortOrder === 'asc' ? '▲' : sortOrder === 'desc' ? '▼' : '' }}
-            </span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr 
-          v-for="coin in displayedCoins" 
-          :key="coin.id" 
-          @click="selectCoin(coin)"
-          :class="{'selected-coin': coin.id === selectedCoin?.id}"
-        >
-          <td>
-            <img :src="coin.image" alt="Coin Image" style="width: 25px; height: 25px;" />
-          </td>
-          <td>{{ coin.name }}</td>
-          <td>${{ coin.current_price.toLocaleString() }}</td>
-          <td>${{ coin.total_volume.toLocaleString() }}</td>
-          <td :style="{ color: coin.price_change_percentage_24h > 0 ? 'green' : 'red' }">
-            {{ coin.price_change_percentage_24h.toFixed(2) }}%
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="main-content">
+      <table class="crypto-table">
+        <colgroup>
+          <col style="width: 8%;" />
+          <col style="width: 12%;" />
+          <col style="width: 25%;" />
+          <col style="width: 30%;" />
+          <col style="width: 25%;" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th></th>
+            <th>코인</th>
+            <th @click="sortTable('current_price')" class="sortable">
+              현재 가격 (USD)
+              <span v-if="sortBy === 'current_price'">
+                {{ sortOrder === 'asc' ? '▲' : sortOrder ===  'desc'? '▼' : '' }}
+              </span>
+            </th>
+            <th @click="sortTable('total_volume')" class="sortable">
+              24h 거래량 (USD)
+              <span v-if="sortBy === 'total_volume'">
+                {{ sortOrder === 'asc' ? '▲' : sortOrder === 'desc'? '▼' : '' }}
+              </span>
+            </th>
+            <th @click="sortTable('price_change_percentage_24h')" class="sortable">
+              24h 변동 (%)
+              <span v-if="sortBy === 'price_change_percentage_24h'">
+                {{ sortOrder === 'asc' ? '▲' : sortOrder === 'desc' ? '▼' : '' }}
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr 
+            v-for="coin in displayedCoins" 
+            :key="coin.id" 
+            @click="selectCoin(coin)"
+            :class="{'selected-coin': coin.id === selectedCoin?.id}"
+          >
+            <td>
+              <img :src="coin.image" alt="Coin Image" style="width: 25px; height: 25px;" />
+            </td>
+            <td>{{ coin.name }}</td>
+            <td>${{ coin.current_price.toLocaleString() }}</td>
+            <td>${{ coin.total_volume.toLocaleString() }}</td>
+            <td :style="{ color: coin.price_change_percentage_24h > 0 ? 'green' : 'red' }">
+              {{ coin.price_change_percentage_24h.toFixed(2) }}%
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -258,8 +259,12 @@ export default {
 
 
 .search-container {
-  position: relative;
-  width: 100%;
+  position: sticky;
+  top: 0;  /* 화면 상단에 고정되도록 */
+  background-color: white;  /* 배경색을 설정하여 다른 요소들과 겹치지 않게 */
+  z-index: 1000;  /* 다른 요소들 위에 표시되도록 */
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  /* 하단 그림자 */
 }
 
 
