@@ -1,5 +1,7 @@
+<!-- App.vue -->
 <template>
   <div id="app">
+
     <div class="menu-bar">
       <div class="tab-menu">
         <button v-for="(tab, index) in tabs" :key="index" :class="{ active: activeTab === tab }" @click="activeTab = tab">
@@ -73,41 +75,33 @@ export default {
 .menu-bar {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 15px 25px;
-  background-color: #2c3e50;
-  border-bottom: 2px solid #34495e;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  align-items: flex-start; /* 상단 정렬 */
+  padding: 10px 20px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
 }
 
+/* 탭 메뉴 스타일 */
 .tab-menu {
   display: flex;
-  flex-direction: row;
-  gap: 20px;
+  flex-direction: row; /* 가로 정렬 */
+  gap: 10px; /* 버튼 간격 */
 }
 
 .tab-menu button {
-  padding: 12px 30px;
-  border: 2px solid transparent;
-  border-radius: 8px;
-  background-color: #3498db;
-  color: #fff;
-  font-weight: bold;
-  font-size: 16px;
-  transition: all 0.3s ease;
+  margin: 0;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: rgb(59, 175, 211);
   cursor: pointer;
 }
 
 .tab-menu button.active {
-  background-color: #2980b9;
-  color: #fff;
-  border-color: #fff;
-  border-width: 2px;
-}
-
-.tab-menu button:hover {
-  background-color: #2980b9;
-  opacity: 0.9;
+  background-color: #007bff;
+  color: white;
+  border-color: #010203;
+  border-width: 3px;
 }
 
 /* 그리드 스타일 */
@@ -115,56 +109,13 @@ export default {
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
-  margin: 30px;
+  margin: 20px;
 }
 
 .frame-item {
-  padding: 25px;
-  border-radius: 12px;
-  background-color: #ecf0f1;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.frame-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* 로그인 모달 스타일 */
-.login-modal {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.4);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1000;
-}
-
-.modal-content {
-  background-color: #fff;
-  border-radius: 8px;
   padding: 20px;
-  width: 400px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: transparent;
-  border: none;
-  font-size: 20px;
-  color: #888;
-  cursor: pointer;
-}
-
-.modal-close:hover {
-  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
 }
 </style>
