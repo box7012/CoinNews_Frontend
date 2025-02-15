@@ -29,15 +29,13 @@
       <div class="section">
         <p>Strategy select</p>
         <div v-for="(strategy, index) in selectedStrategyList" :key="index" class="strategy-item">
-          <div class="strategy-header">
-            <select v-model="strategy.selected" id="selectedStrategy" class="select-box">
-              <option value="" disabled selected>전략을 선택하세요</option>
-              <option v-for="strategy in strategList" :key="strategy" :value="strategy">
-                {{ strategy }}
-              </option>
-            </select>
-            <button @click="deleteStrategy(index)" class="remove-btn">x</button>
-          </div>
+          <select v-model="strategy.selected" id="selectedStrategy" class="select-box">
+            <option value="" disabled selected>전략을 선택하세요</option>
+            <option v-for="strategy in strategList" :key="strategy" :value="strategy">
+              {{ strategy }}
+            </option>
+          </select>
+          <button @click="deleteStrategy(index)" class="remove-btn">x</button>
           <div v-if="strategy.selected === 'RSI'" class="strategy-params">
             <div>
               <label for="buy">Buy</label>
@@ -324,40 +322,6 @@
     padding: 8px 12px;
     border-radius: 5px;
     font-weight: bold;
-  }
-  
-    .strategy-item {
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-    background-color: #f9f9f9;
-  }
-
-  .strategy-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-
-  .strategy-header .select-box {
-    flex: 1;
-  }
-
-  .strategy-header .remove-btn {
-    background-color: #ff6b6b;
-    color: white;
-    border: none;
-    padding: 5px 8px;
-    cursor: pointer;
-    border-radius: 3px;
-  }
-
-  .strategy-params {
-    margin-top: 10px;
-    padding-left: 10px;
-    border-left: 2px solid #ddd;
   }
   
   /* 삭제 버튼 스타일 */
