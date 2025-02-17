@@ -1,23 +1,21 @@
 <template>
-  <div class="dashboard-grid">
-    <!-- 좌측 (1번, 3번) CoinMarketVue -->
-    <div class="dashboard-frame-item large-item">
-      <CoinMarketVue />
-    </div>
-
-    <!-- 우측 상단 (2번) CoinChartVue -->
-    <div class="dashboard-frame-item">
-      <CoinChartVue />
-    </div>
-
-    <!-- 우측 하단 (4번) CoinNewsRealTime -->
-    <div class="dashboard-frame-item">
-      <CoinNewsRealTime />
+  <div :class="{ 'dark-mode': isDarkMode }" class="app">
+    <div class="dashboard-grid">
+      <div class="dashboard-frame-item large-item">
+        <CoinMarketVue />
+      </div>
+      <div class="dashboard-frame-item">
+        <CoinChartVue />
+      </div>
+      <div class="dashboard-frame-item">
+        <CoinNewsRealTime />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import CoinMarketVue from './CoinMarket.vue';
 import CoinChartVue from './CoinChart.vue';
 import CoinNewsRealTime from './CoinNewsRealTime.vue';
@@ -28,37 +26,28 @@ export default {
     CoinChartVue,
     CoinNewsRealTime,
   },
+  computed: {
+    ...mapGetters(['isDarkMode']),
+  },
 };
 </script>
 
-<!-- <style scoped>
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 0.9fr 1fr; /* 좌측 2배 크기, 우측 1배 크기 */
-  grid-template-rows: 1.1fr 1fr; /* 2행 레이아웃 */
-  gap: 10px;
-  height: 100vh; /* 높이 설정 */
-}
-
-.dashboard-frame-item {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  overflow: auto;
-}
-
-.large-item {
-  grid-row: span 2; /* 좌측 (1, 3) 합치기 */
-}
-</style> -->
-
 <style scoped>
+.app {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode {
+  background-color: #2c3e50;
+  color: white;
+}
+
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 700px 800px; /* 좌측 300px, 우측 500px */
-  grid-template-rows: 450px 500px; /* 각 행 높이 400px 고정 */
+  grid-template-columns: 700px 800px;
+  grid-template-rows: 450px 500px;
   gap: 10px;
-  height: 100vh; /* 전체 높이 설정 */
+  height: 100vh;
 }
 
 .dashboard-frame-item {
@@ -69,7 +58,7 @@ export default {
 }
 
 .large-item {
-  grid-row: span 2; /* 좌측 (1, 3) 합치기 */
-  height: 810px; /* 400px x 2 + gap 고려 */
+  grid-row: span 2;
+  height: 810px;
 }
 </style>

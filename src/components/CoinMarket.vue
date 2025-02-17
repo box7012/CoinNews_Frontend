@@ -1,7 +1,5 @@
 <template>
-  <div class="container">
-    <!-- <h1 class="title">Crypto Dashboard</h1> -->
-
+  <div :class="{ 'dark': isDarkMode }" class="container">
     <!-- 검색 입력창 -->
     <div class="search-container">
       <input
@@ -37,13 +35,13 @@
             <th @click="sortTable('current_price')" class="sortable">
               현재 가격 (USD)
               <span v-if="sortBy === 'current_price'">
-                {{ sortOrder === 'asc' ? '▲' : sortOrder ===  'desc'? '▼' : '' }}
+                {{ sortOrder === 'asc' ? '▲' : sortOrder === 'desc' ? '▼' : '' }}
               </span>
             </th>
             <th @click="sortTable('total_volume')" class="sortable">
               24h 거래량 (USD)
               <span v-if="sortBy === 'total_volume'">
-                {{ sortOrder === 'asc' ? '▲' : sortOrder === 'desc'? '▼' : '' }}
+                {{ sortOrder === 'asc' ? '▲' : sortOrder === 'desc' ? '▼' : '' }}
               </span>
             </th>
             <th @click="sortTable('price_change_percentage_24h')" class="sortable">
@@ -59,8 +57,7 @@
             v-for="coin in displayedCoins" 
             :key="coin.id" 
             @click="selectCoin(coin)"
-            :class="{'selected-coin': coin.id === selectedCoin?.id}"
-          >
+            :class="{'selected-coin': coin.id === selectedCoin?.id}"> 
             <td>
               <img :src="coin.image" alt="Coin Image" style="width: 25px; height: 25px;" />
             </td>
@@ -79,7 +76,7 @@
 
 <script>
 import axios from "axios";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   data() {
@@ -94,6 +91,7 @@ export default {
   },
 
   computed: {
+    ...mapGetters(['isDarkMode']),
 
     sortedCoins() {
       if (!this.sortBy || !this.sortOrder) return this.coins;
@@ -118,20 +116,12 @@ export default {
   },
 
   methods: {
-
     ...mapActions(["updateSelectedCoin"]),
 
     clearSearch() {
-      // selectedCoin은 null로 설정
       this.selectedCoin = null;
-
-      // searchQuery 초기화
       this.searchQuery = null;
-
-      // 드롭다운 숨기기
       this.showDropdown = false;
-
-      // Vuex 상태도 업데이트 (선택된 코인 없음)
       this.updateSelectedCoin(null);
     },
 
@@ -157,9 +147,6 @@ export default {
             params: {
               vs_currency: "usd",
               order: "market_cap_desc",
-              // per_page: 50,
-              // page: 1,
-              // sparkline: false,
             },
           }
         );
@@ -169,28 +156,22 @@ export default {
       }
     },
 
-    // 코인 선택 또는 선택 해제
     selectCoin(coin) {
       if (this.selectedCoin && this.selectedCoin.id === coin.id) {
-        // 이미 선택된 코인을 다시 클릭하면 null로 설정
         this.selectedCoin = null;
         this.updateSelectedCoin(null);
       } else {
-        // 코인 선택
         this.selectedCoin = coin;
         this.updateSelectedCoin(coin.id);
       }
     },
 
-    // ESC 키 눌렀을 때 selectedCoin을 null로 설정
     handleKeydown(event) {
       if (event.key === "Escape") {
         this.selectedCoin = null;
         this.updateSelectedCoin(null);
       }
     },
-
-
 
     hideDropdown() {
       setTimeout(() => {
@@ -199,10 +180,9 @@ export default {
     },
 
     filterCoinsOnEnter() {
-      this.showDropdown = false; // 드롭다운 숨기기
-      // 테이블에 필터링된 코인만 표시
+      this.showDropdown = false;
       if (this.searchQuery) {
-        this.displayedCoins; // displayedCoins는 필터된 결과를 기반으로 계산됨
+        this.displayedCoins;
       }
     },
   },
@@ -213,62 +193,65 @@ export default {
   },
 
   beforeDestroy() {
-    // 컴포넌트가 제거되기 전에 이벤트 리스너 제거
     window.removeEventListener("keydown", this.handleKeydown);
   },
-
 };
 </script>
 
 <style scoped>
+.container {
+  transition: background-color 0.3s, color 0.3s;
+}
 
-/* 테이블 스타일 */
+.dark-mode {
+  background-color: #2c3e50;
+  color: white;
+}
+
 .crypto-table {
   table-layout: fixed;
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 10px; /* 테이블 간격 */
-  background-color: #fff; /* 배경색 */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 테이블 그림자 */
-  border-radius: 10px; /* 모서리 둥글게 */
+  border-spacing: 0 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 
-.crypto-table th, .crypto-table td {
-  padding: 12px 20px; /* 셀 내부 여백 */
+.crypto-table th,
+.crypto-table td {
+  padding: 12px 20px;
   text-align: left;
-  font-size: 16px; /* 글자 크기 */
-  border-bottom: 1px solid #f1f1f1; /* 셀 하단 테두리 */
+  font-size: 16px;
+  border-bottom: 1px solid #f1f1f1;
 }
 
 .crypto-table th {
-  background-color: #f9f9f9; /* 헤더 배경 */
+  background-color: #f9f9f9;
   font-weight: bold;
 }
 
 .crypto-table tr:hover {
-  background-color: #f4f4f4; /* 호버시 배경색 */
+  background-color: #f4f4f4;
 }
 
 .coin-row {
-  cursor: pointer; /* 클릭 가능한 느낌 */
+  cursor: pointer;
 }
 
 .coin-row:hover {
-  background-color: #f1f1f1; /* 클릭 시 배경색 */
+  background-color: #f1f1f1;
 }
-
 
 .search-container {
   position: sticky;
-  top: 0;  /* 화면 상단에 고정되도록 */
-  background-color: white;  /* 배경색을 설정하여 다른 요소들과 겹치지 않게 */
-  z-index: 1000;  /* 다른 요소들 위에 표시되도록 */
+  top: 0;
+  background-color: white;
+  z-index: 1000;
   padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  /* 하단 그림자 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-
-/* 자동완성 드롭다운 */
 .dropdown {
   position: absolute;
   width: 100%;
@@ -301,19 +284,14 @@ export default {
   background-color: #f5f5f5;
 }
 
-.search-container {
-  position: relative;
-  width: 100%;
-}
-
 .search-box {
   width: 100%;
   padding: 8px;
-  padding-right: 40px; /* X 버튼과 겹치지 않도록 여유 공간 추가 */
+  padding-right: 40px;
   border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
-  font-size: 16px; /* 글자 크기 조정 */
+  font-size: 16px;
 }
 
 .clear-button {
@@ -321,32 +299,80 @@ export default {
   right: 5px;
   top: 50%;
   transform: translateY(-50%);
-  width: 30px; /* 버튼 너비 */
-  height: 30px; /* 버튼 높이 */
-  background: #e0e0e0; /* 배경색 */
-  border: 1px solid #bbb; /* 테두리 추가 */
-  font-size: 16px; /* X 크기 조정 */
+  width: 30px;
+  height: 30px;
+  background: #e0e0e0;
+  border: 1px solid #bbb;
+  font-size: 16px;
   cursor: pointer;
   color: rgb(70, 70, 70);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 5px; /* 네모난 모양 유지 */
+  border-radius: 5px;
 }
 
 .clear-button:hover {
-  background: #d6d6d6; /* 마우스 호버 시 색상 변경 */
-}
-
-
-.clear-button:hover {
-  color: black;
+  background: #d6d6d6;
 }
 
 .selected-coin {
-  background-color: rgba(255, 215, 0, 0.2); /* 옅은 노란색 배경 */
+  background-color: rgba(255, 215, 0, 0.2);
   transition: background-color 0.3s ease-in-out;
 }
 
+/* 다크모드 관련 스타일 */
+.dark {
+  background-color: #333;  /* 배경색 어두운 색 */
+  color: #fff;  /* 텍스트 색 흰색 */
+}
+
+.dark .crypto-table {
+  background-color: #444;  /* 테이블 배경 어두운 색 */
+  color: #fff;  /* 테이블 텍스트 색 흰색 */
+}
+
+.dark .search-container {
+  background-color: #555;  /* 검색창 배경 어두운 색 */
+}
+
+.dark .search-box {
+  background-color: #666;  /* 검색창 입력란 배경 어두운 색 */
+  color: #fff;  /* 텍스트 색 흰색 */
+}
+
+.dark .dropdown {
+  background-color: #444;  /* 드롭다운 배경 어두운 색 */
+}
+
+.dark .sortable:hover {
+  background-color: #666;  /* 테이블 헤더 호버 시 배경 어두운 색 */
+}
+
+.dark .selected-coin {
+  background-color: rgba(255, 215, 0, 0.3);  /* 선택된 코인 배경 색 */
+}
+
+/* 다크모드에서 테이블 헤더 스타일 */
+.dark .crypto-table th {
+  background-color: #444;  /* 어두운 배경색 */
+  color: #fff;  /* 흰색 텍스트 */
+}
+
+.dark .crypto-table th.sortable:hover {
+  background-color: #555;  /* 호버 시 배경색을 조금 더 어두운 색으로 */
+}
+
+/* 다크모드에서 테이블 항목 호버링 시 스타일 */
+.dark .crypto-table tbody tr:hover {
+  background-color: #555;  /* 어두운 배경색 */
+  color: #fff;  /* 흰색 텍스트 */
+}
+
+/* 다크모드에서 선택된 항목의 스타일 */
+.dark .crypto-table .selected-coin {
+  background-color: #333;  /* 선택된 항목의 배경색 */
+  color: #fff;  /* 선택된 항목의 텍스트 색 */
+}
 
 </style>

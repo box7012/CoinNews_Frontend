@@ -1,11 +1,14 @@
 <template>
-  <div class="header">
+  <div :class="['header', { dark: isDarkMode }]">
     <h1>Welcome!</h1>
     <div class="button-container">
       <nav>
         <span v-if="user" class="welcome-msg">{{ user.email }}님, 환영합니다!</span>
         <button v-if="!user" class="login-btn" @click="showLoginModal = true">로그인</button>
         <button v-if="user" class="login-btn" @click="logout">로그아웃</button>
+        <button class="toggle-dark-mode" @click="toggleDarkMode">
+          {{ isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode' }}
+        </button>
       </nav>
     </div>
   </div>
@@ -14,28 +17,32 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import LoginModal from './components/LoginModal.vue';
 
 export default {
-  components: {
-    LoginModal,
-  },
+  components: { LoginModal },
 
   data() {
     return {
       showLoginModal: false,
       user: null,
-    }
+    };
+  },
+
+  computed: {
+    ...mapState(['isDarkMode'])
   },
 
   methods: {
+    ...mapActions(['toggleDarkMode']),
+    
     handleUserLogin(user) {
-      console.log("로그인 성공, 사용자 정보:", user);
-      this.user = user; // 로그인한 사용자 정보 저장
+      this.user = user;
+      localStorage.setItem("user", JSON.stringify(user));
     },
 
     logout() {
-      console.log("로그아웃 실행");
       localStorage.removeItem("authToken");
       localStorage.removeItem("user");
       this.user = null;
@@ -44,37 +51,32 @@ export default {
 
   mounted() {
     const user = localStorage.getItem("user");
-    if (user) {
-      this.user = JSON.parse(user); // localStorage에서 사용자 정보 불러오기
-    }
-  }
-}
+    if (user) this.user = JSON.parse(user);
+  },
+};
 </script>
 
 <style scoped>
-/* 헤더 스타일 */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 25px;
-  background-color: #2c3e50;
-  color: #fff;
+  background-color: #f8f9fa;
+  color: #2c3e50;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.header h1 {
-  font-size: 28px;
-  font-weight: 600;
-  margin: 0;
+.header.dark {
+  background-color: #2c3e50;
+  color: #fff;
 }
 
-/* 로그인 버튼 스타일 */
-.login-btn {
+.login-btn, .toggle-dark-mode {
   padding: 12px 25px;
   border: 2px solid transparent;
   border-radius: 6px;
-  background-color: #3498db;
+  background-color: #007bff;
   color: #fff;
   font-weight: bold;
   font-size: 16px;
@@ -82,20 +84,18 @@ export default {
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.login-btn:hover {
-  background-color: #2980b9;
+.login-btn:hover, .toggle-dark-mode:hover {
+  background-color: #0056b3;
   transform: scale(1.05);
 }
 
-/* 로그인/환영 메시지 */
 .welcome-msg {
   font-size: 16px;
-  color: #ecf0f1;
+  color: inherit;
   font-weight: 500;
   margin-right: 20px;
 }
 
-/* 버튼 컨테이너 스타일 */
 .button-container {
   display: flex;
   justify-content: flex-end;
@@ -106,7 +106,6 @@ export default {
   margin-left: 15px;
 }
 
-/* 반응형 스타일 */
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
