@@ -310,12 +310,14 @@
   /* 전체 컨테이너 스타일 */
   .container {
     display: grid;
-    grid-template-columns: 1fr 4fr 2fr;
+    grid-template-columns: 1fr 4fr 3fr;
     gap: 20px;
-    padding: 20px;
-    height: 100vh;
+    padding: 0px;
+    min-height: auto;
+    max-height: 25000px;
     background-color: #f5f5f5;
     font-family: 'Arial', sans-serif;
+    width: 1465px;
   }
   
   /* 왼쪽 패널 스타일 */
@@ -323,7 +325,8 @@
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+    width: 240px;
   }
   
   /* 섹션 스타일 */
@@ -427,23 +430,28 @@
   /* 중앙 패널 스타일 */
   .center-panel {
     background-color: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+    /* width: 750px; */
+  }
+
+    /* 오른쪽 패널 스타일 */
+  .right-panel {
+    background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+    width: 500px;
   }
+  
   
   /* 그래프 이미지 스타일 */
   .graph-image {
     width: 100%;
     border-radius: 5px;
-  }
-  
-  /* 오른쪽 패널 스타일 */
-  .right-panel {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: auto;
+    margin: 10px;
   }
   
   /* 테이블 스타일 */

@@ -22,9 +22,9 @@
     <div class="main-content">
       <table class="crypto-table">
         <colgroup>
-          <col style="width: 8%;" />
+          <col style="width: 7%;" />
           <col style="width: 12%;" />
-          <col style="width: 25%;" />
+          <col style="width: 26%;" />
           <col style="width: 30%;" />
           <col style="width: 25%;" />
         </colgroup>
@@ -242,7 +242,7 @@ export default {
   position: sticky;
   top: 0;
   background-color: white;
-  z-index: 1000;
+  z-index: 900;
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -287,13 +287,13 @@ export default {
   border-radius: 5px;
   outline: none;
   font-size: 16px;
+  position: relative;
 }
 
 .clear-button {
   position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 12px;
+  right: 15px;
   width: 30px;
   height: 30px;
   background: #e0e0e0;
@@ -307,8 +307,10 @@ export default {
   border-radius: 5px;
 }
 
+
 .clear-button:hover {
   background: #d6d6d6;
+  transform: translateY(5%) translateY(-3px);
 }
 
 .selected-coin {
@@ -330,10 +332,16 @@ export default {
 
 .dark .search-container {
   background-color: #555;  /* 검색창 배경 어두운 색 */
+  color: white;
+}
+
+/* 다크 모드에서 placeholder 텍스트 색상 */
+.dark .search-container input::placeholder {
+  color: #ffffff; /* 어두운 배경에 잘 보이는 밝은 색 */
 }
 
 .dark .search-box {
-  background-color: #666;  /* 검색창 입력란 배경 어두운 색 */
+  background-color: #2c2c2c;  /* 검색창 입력란 배경 어두운 색 */
   color: #fff;  /* 텍스트 색 흰색 */
 }
 

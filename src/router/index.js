@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import SignUp from "../views/SignUp.vue";
-import Home from '../components/MainDisplay.vue';
+// import Home from '../components/MainDisplay.vue';
+import Home from '../App.vue';
 import SignUpSuccess from '../views/SignUpSuccess.vue';
 import WritingCommunityBoard from '../views/WritingCommunityBoard.vue';
 

@@ -58,7 +58,9 @@ export default {
 }
 
 .large-item {
+  padding: 0px;
   grid-row: span 2;
-  height: 810px;
+  height: 960px;
+  margin: 0px;
 }
 </style>
