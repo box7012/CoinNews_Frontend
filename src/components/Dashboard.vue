@@ -38,7 +38,7 @@ export default {
 }
 
 .dark-mode {
-  background-color: #2c3e50;
+  background-color: #1b1b1b;
   color: white;
 }
 

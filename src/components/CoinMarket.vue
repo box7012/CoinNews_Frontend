@@ -198,14 +198,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .container {
   transition: background-color 0.3s, color 0.3s;
-}
-
-.dark-mode {
-  background-color: #2c3e50;
-  color: white;
 }
 
 .crypto-table {
@@ -317,13 +312,14 @@ export default {
 }
 
 .selected-coin {
-  background-color: rgba(255, 215, 0, 0.2);
+  background-color: rgba(180, 235, 91, 0.911);
   transition: background-color 0.3s ease-in-out;
+  font-weight: bold;  /* 글자 굵게 */
 }
 
 /* 다크모드 관련 스타일 */
 .dark {
-  background-color: #333;  /* 배경색 어두운 색 */
+  background-color: #1b1b1b;  /* 배경색 어두운 색 */
   color: #fff;  /* 텍스트 색 흰색 */
 }
 
@@ -349,10 +345,6 @@ export default {
   background-color: #666;  /* 테이블 헤더 호버 시 배경 어두운 색 */
 }
 
-.dark .selected-coin {
-  background-color: rgba(255, 215, 0, 0.3);  /* 선택된 코인 배경 색 */
-}
-
 /* 다크모드에서 테이블 헤더 스타일 */
 .dark .crypto-table th {
   background-color: #444;  /* 어두운 배경색 */
@@ -371,8 +363,9 @@ export default {
 
 /* 다크모드에서 선택된 항목의 스타일 */
 .dark .crypto-table .selected-coin {
-  background-color: #333;  /* 선택된 항목의 배경색 */
-  color: #fff;  /* 선택된 항목의 텍스트 색 */
+  background-color: #124b12;  /* 선택된 항목의 배경색 */
+  color: #ffffff;  /* 선택된 항목의 텍스트 색 */
+  font-weight: bold;  /* 글자 굵게 */
 }
 
 </style>

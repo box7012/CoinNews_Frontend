@@ -60,7 +60,20 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+
+body {
+  background-color: #ffffff; /* 라이트 모드 배경색 */
+}
+
+body.dark {
+  background-color: #1b1b1b; /* 다크 모드 배경색 */
+}
+
+.dark {
+  color: #ffffff; /* 다크 모드 텍스트 색상 */
+}
+
 /* 다크 모드 전환 버튼 */
 .toggle-dark-mode {
   padding: 10px 20px;
@@ -89,18 +102,18 @@ export default {
 
 /* 다크 모드 스타일 */
 .dark .menu-bar {
-  background-color: #2c3e50;
-  border-bottom: 2px solid #34495e;
+  background-color: #1b1b1b;
+  border-bottom: 2px solid #1b1b1b;
 }
 
 .dark .grid {
-  background-color: #1e272e;
+  background-color: #1b1b1b;
 }
 
 .dark .frame-item {
-  background-color: #2c3e50;
+  background-color: #1b1b1b;
   color: white;
-  border: 1px solid #34495e;
+  border: 1px solid #1b1b1b;
 }
 
 /* 탭 메뉴 스타일 */
@@ -135,15 +148,15 @@ export default {
 
 /* 다크 모드 탭 스타일 */
 .dark .tab-menu button {
-  background-color: #4a69bd;
+  background-color: #2d2d2e;
 }
 
 .dark .tab-menu button.active {
-  background-color: #1e3799;
+  background-color: #747474;
 }
 
 .dark .tab-menu button:hover {
-  background-color: #1e3799;
+  background-color: #555555;
 }
 
 /* 그리드 스타일 */
@@ -168,8 +181,8 @@ export default {
 }
 
 .dark .frame-item {
-  background-color: #2c3e50;
+  background-color: #1b1b1b;
   color: white;
-  border: 1px solid #34495e;
+  border: 1px solid #363636;
 }
 </style>

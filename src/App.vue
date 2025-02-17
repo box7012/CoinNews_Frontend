@@ -34,6 +34,20 @@ export default {
     ...mapState(['isDarkMode'])
   },
 
+  watch: {
+    isDarkMode(newValue) {
+      const appElement = document.querySelector('#app');
+      const bodyElement = document.body; // body 태그 선택
+      if (newValue) {
+        appElement.classList.add('dark');
+        bodyElement.classList.add('dark'); // body에 dark 클래스 추가
+      } else {
+        appElement.classList.remove('dark');
+        bodyElement.classList.remove('dark'); // body에서 dark 클래스 제거
+      }
+    },
+  },
+
   methods: {
     ...mapActions(['toggleDarkMode']),
     
@@ -52,11 +66,24 @@ export default {
   mounted() {
     const user = localStorage.getItem("user");
     if (user) this.user = JSON.parse(user);
+
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    this.$store.dispatch('updateDarkMode', darkMode);
+
+    const appElement = document.querySelector('#app');
+    const bodyElement = document.body; // body 태그 선택
+    if (darkMode) {
+      appElement.classList.add('dark');
+      bodyElement.classList.add('dark'); // body에 dark 클래스 추가
+    } else {
+      appElement.classList.remove('dark');
+      bodyElement.classList.remove('dark'); // body에서 dark 클래스 제거
+    }
   },
 };
 </script>
 
-<style scoped>
+<style>
 .header {
   display: flex;
   justify-content: space-between;
@@ -68,10 +95,19 @@ export default {
 }
 
 .header.dark {
-  background-color: #2c3e50;
+  background-color: #1b1b1b;
   color: #fff;
 }
 
+.welcome-msg {
+  font-size: 16px;
+  color: inherit;
+  font-weight: 500;
+  margin-right: 20px;
+}
+
+
+/* 기본 버튼 스타일 */
 .login-btn, .toggle-dark-mode {
   padding: 12px 25px;
   border: 2px solid transparent;
@@ -89,13 +125,17 @@ export default {
   transform: scale(1.05);
 }
 
-.welcome-msg {
-  font-size: 16px;
-  color: inherit;
-  font-weight: 500;
-  margin-right: 20px;
+/* 다크 모드에서 버튼 색상 변경 */
+body.dark .login-btn, body.dark .toggle-dark-mode {
+  background-color: #444;  /* 다크 모드에서 버튼 배경색 */
+  color: #fff;  /* 다크 모드에서 텍스트 색상 */
 }
 
+body.dark .login-btn:hover, body.dark .toggle-dark-mode:hover {
+  background-color: #666;  /* 다크 모드에서 버튼 hover 시 배경색 */
+}
+
+/* 버튼 컨테이너 스타일 */
 .button-container {
   display: flex;
   justify-content: flex-end;
@@ -105,7 +145,6 @@ export default {
 .button-container button {
   margin-left: 15px;
 }
-
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
@@ -126,4 +165,20 @@ export default {
     margin-top: 10px;
   }
 }
+
+/* #app에 대한 배경색 설정 */
+#app {
+  background-color: #ffffff; /* 라이트 모드 기본 배경 */
+}
+
+#app.dark {
+  background-color: #1b1b1b; /* 다크 모드 배경 */
+}
+
+/* body.dark에 대한 배경색과 색상 설정 */
+body.dark {
+  background-color: #1b1b1b;
+  color: #fff;
+}
+
 </style>

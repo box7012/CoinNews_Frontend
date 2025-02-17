@@ -168,6 +168,7 @@
   
   <script>
   import axios from 'axios';
+  import { mapState, mapActions } from 'vuex';
   
   export default {
     data() {
@@ -204,9 +205,32 @@
     },
     mounted() {
       this.fetchTickers();  // 컴포넌트가 마운트되면 데이터 가져오기
+      const darkMode = localStorage.getItem('darkMode') === 'true';
+      this.$store.dispatch('updateDarkMode', darkMode); // 초기 다크 모드 상태 설정
     },
-  
+
+    computed: {
+    ...mapState(['isDarkMode']), // Vuex 상태 매핑
+    },
+
+    watch: {
+      isDarkMode(newValue) {
+        const appElement = document.querySelector('#app');
+        const bodyElement = document.body;
+        if (newValue) {
+          appElement.classList.add('dark');
+          bodyElement.classList.add('dark');
+        } else {
+          appElement.classList.remove('dark');
+          bodyElement.classList.remove('dark');
+        }
+      },
+    },
+    
     methods: {
+
+      ...mapActions(['toggleDarkMode']), // Vuex 액션 매핑
+
       formatDate(timestamp) {
         if (!timestamp) return "N/A";
         const date = new Date(timestamp);
@@ -457,4 +481,78 @@
     font-size: 1.5em;
     color: #333;
   }
+
+  /* 다크 모드 스타일 */
+  body.dark .container {
+    background-color: #1b1b1b; 
+    color: #ffffff;
+  }
+
+  body.dark .left-panel,
+  body.dark .center-panel,
+  body.dark .right-panel {
+    background-color: #2d2d2d;
+    color: #ffffff;
+  }
+
+  body.dark .ticker-item {
+    background-color: #2d2d2d;
+    color: #ffffff;
+  }
+
+  body.dark .select-box,
+  body.dark .date-input {
+    background-color: #2d2d2d;
+    color: #ffffff;
+    border-color: #555;
+  }
+
+  body.dark .strategy-item {
+    background-color: #2d2d2d; /* 다크 모드 배경색 */
+    border: 1px solid #555; /* 다크 모드 테두리 색 */
+    color: #ffffff; /* 다크 모드 텍스트 색 */
+  }
+
+  body.dark .strategy-header {
+    background-color: #2d2d2d; /* 다크 모드 배경색 */
+    color: #ffffff; /* 다크 모드 텍스트 색 */
+  }
+
+  body.dark .add-strategy-btn,
+  body.dark .analysis-btn {
+    background-color: #4caf50;
+    color: #ffffff;
+  }
+
+  body.dark .remove-btn {
+    background-color: #ff6b6b;
+    color: #ffffff;
+  }
+
+  body.dark .final-value-table th,
+  body.dark .backtest-table th {
+    background-color: #2d2d2d;
+    color: #ffffff;
+  }
+
+  body.dark .final-value-table td,
+  body.dark .backtest-table td {
+    background-color: #1b1b1b;
+    color: #ffffff;
+    border-color: #555;
+  }
+
+  body.dark .loading-overlay {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  body.dark .loading-message {
+    color: #ffffff;
+  }
+
+  body.dark .section {
+    background-color: #2d2d2d; /* 다크 모드 배경색 */
+    color: #ffffff; /* 다크 모드 텍스트 색 */
+  }
+
   </style>
