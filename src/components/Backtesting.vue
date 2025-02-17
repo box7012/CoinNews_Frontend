@@ -313,7 +313,7 @@
     grid-template-columns: 1fr 4fr 3fr;
     gap: 20px;
     padding: 0px;
-    min-height: auto;
+    height: 1000px;
     max-height: 25000px;
     background-color: #f5f5f5;
     font-family: 'Arial', sans-serif;
@@ -327,6 +327,7 @@
     border-radius: 10px;
     /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
     width: 240px;
+    min-height: 600px;
   }
   
   /* 섹션 스타일 */
@@ -384,7 +385,6 @@
   .strategy-params {
     margin-top: 10px;
     padding-left: 10px;
-    border-left: 2px solid #ddd;
   }
   
   /* 삭제 버튼 스타일 */
@@ -504,7 +504,7 @@
   }
 
   body.dark .ticker-item {
-    background-color: #2d2d2d;
+    background-color: #5f5f5f;
     color: #ffffff;
   }
 
@@ -562,5 +562,9 @@
     background-color: #2d2d2d; /* 다크 모드 배경색 */
     color: #ffffff; /* 다크 모드 텍스트 색 */
   }
+
+  .dark p {
+  color: #ffffff;  /* 텍스트 색상을 밝은 색으로 설정 */
+}
 
   </style>

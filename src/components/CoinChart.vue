@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ dark: isDarkMode }">
     <h2 class="chart-title">{{ getSelectedCoin }} 가격 차트</h2>
     <!-- 차트 -->
     <canvas id="ohlcChart"></canvas>
@@ -12,6 +12,7 @@ import { CandlestickController, CandlestickElement } from 'chartjs-chart-financi
 import { mapGetters } from 'vuex';
 import axios from 'axios';
 import 'chartjs-adapter-date-fns';
+import { mapState, mapActions } from 'vuex';
 
 Chart.register(...registerables);
 Chart.register(CandlestickController, CandlestickElement);
@@ -29,6 +30,7 @@ export default {
   },
   computed: {
     ...mapGetters(['getSelectedCoin']), // Vuex에서 선택된 코인 가져오기
+    ...mapState(['isDarkMode']), // Vuex 상태 매핑
     formatChangedSelectedCoin() {
       return this.getSelectedCoin // Vuex에서 가져온 값 사용
         ? this.getSelectedCoin.toLowerCase().replace(/\s+/g, '-')
@@ -38,6 +40,17 @@ export default {
   watch: {
     getSelectedCoin() {
       this.fetchData();
+    },
+    isDarkMode(newValue) {
+      const appElement = document.querySelector('#app');
+      const bodyElement = document.body;
+      if (newValue) {
+        appElement.classList.add('dark');
+        bodyElement.classList.add('dark');
+      } else {
+        appElement.classList.remove('dark');
+        bodyElement.classList.remove('dark');
+      }
     },
   },
   methods: {
@@ -112,6 +125,9 @@ export default {
             legend: {
               position: 'top',
               labels: {
+                font: {
+                  color: this.isDarkMode ? "#fff" : '#000', // 다크 모드에서는 흰색, 라이트 모드에서는 검은색
+                },
                 generateLabels: (chart) => {
                   return [
                     {
@@ -182,6 +198,28 @@ export default {
 canvas {
   max-width: 100%;
   height: 400px;
-  background: linear-gradient(to bottom, rgba(0, 128, 0, 0.1), rgba(0, 128, 0, 0));
+  background: linear-gradient(to bottom, rgba(33, 156, 33, 0.1), rgba(0, 128, 0, 0));
 }
+
+.dark .chart-title {
+  color: #cccccc; /* 다크 모드에서 제목 색상 */
+}
+
+.dark canvas {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0)); /* 다크 모드에서 캔버스 배경 */
+}
+
+.dark .tooltip {
+  background-color: rgba(255, 246, 246, 0.8); /* 다크 모드에서 툴팁 배경 */
+}
+
+/* 차트의 색상 변경: 양봉과 음봉 색을 다르게 설정 */
+.dark .chart-candle-up {
+  background-color: rgba(255, 255, 255, 0.3); /* 양봉 색상 */
+}
+
+.dark .chart-candle-down {
+  background-color: rgba(255, 0, 0, 0.3); /* 음봉 색상 */
+}
+
 </style>

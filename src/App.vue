@@ -132,6 +132,7 @@ export default {
   top: 0;
   z-index: 1000;
   background-color: #ffffff; /* light 모드에서 불투명한 배경 설정 */
+  padding-bottom: 15px;
 }
 
 .header.dark {
@@ -147,21 +148,8 @@ export default {
 }
 
 
-/* 기본 버튼 스타일 */
-.login-btn, .toggle-dark-mode {
-  padding: 12px 20px; /* 적당한 패딩으로 원형 버튼 형태 유지 */
-  border: 2px solid transparent;
-  border-radius: 50%; /* 동그란 버튼 */
-  background-color: #007bff;
-  color: #fff;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
 .login-btn:hover, .toggle-dark-mode:hover {
-  background-color: #0056b3;
+  background-color: #ffffff;
   transform: scale(1.05);
 }
 
@@ -230,18 +218,14 @@ body.dark {
 }
 
 /* 다크 모드 전환 버튼 */
-.toggle-dark-mode {
+.login-btn, .toggle-dark-mode {
   padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
-
-.toggle-dark-mode:hover {
-  background-color: #0056b3;
 }
 
 /* 메뉴 바 스타일 */
@@ -251,8 +235,6 @@ body.dark {
   gap: 20px;
   padding: 0px 25px;
   background-color: #f8f9fa;
-  /* border-bottom: 2px solid #dee2e6; */
-  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
 }
 
 /* 다크 모드 스타일 */
@@ -277,30 +259,32 @@ body.dark {
   flex-direction: row;
   margin-top: 0px;
   gap: 20px;
+  flex-wrap: nowrap
 }
 
 .tab-menu button {
   padding: 12px 30px;
   border: 2px solid transparent;
   border-radius: 8px;
-  background-color: #007bff;
-  color: #fff;
+  background-color: #ffffff;
+  color: #999999;
   font-weight: bold;
   font-size: 16px;
   transition: all 0.3s ease;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .tab-menu button.active {
-  background-color: #0056b3;
-  color: #fff;
-  border-color: #007bff;
+  background-color: #ffffff;
+  color: #000000;
+  border-color: #d1d1d1;
 }
 
-.tab-menu button:hover {
-  background-color: #0056b3;
+/* .tab-menu button:hover {
+  background-color: #ffffff;
   opacity: 0.9;
-}
+} */
 
 /* 다크 모드 탭 스타일 */
 .dark .tab-menu button {
@@ -328,16 +312,12 @@ body.dark {
   padding: 25px;
   border-radius: 12px;
   background-color: #ffffff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid #dee2e6;
   max-width: 1565px;
   margin: 0 auto; /* 수평 중앙 정렬 */
   min-height: 1000px;
-}
-
-.frame-item:hover {
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
 }
 
 .dark .frame-item {

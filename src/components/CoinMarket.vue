@@ -206,24 +206,32 @@ export default {
 .crypto-table {
   table-layout: fixed;
   width: 100%;
-  border-collapse: separate;
+  margin: 0px;
+  padding-top: 0px;
+  /* border-collapse: separate; */
   border-spacing: 0 10px;
   background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+  /* border-radius: 10px; */
 }
 
 .crypto-table th,
 .crypto-table td {
-  padding: 12px 20px;
+  padding: 8px 12px;
   text-align: left;
   font-size: 16px;
   border-bottom: 1px solid #f1f1f1;
 }
 
 .crypto-table th {
-  background-color: #f9f9f9;
+  background-color: #aac77c;
   font-weight: bold;
+  position: sticky;
+  top: 56px;  /* search-container 바로 아래로 위치 조정 */
+  z-index: 500;  /* search-container보다 낮게 설정 */
+  border: 1px solid #ccc;
+  margin: 12px;
+  padding-top: 10px;
 }
 
 .crypto-table tr:hover {
@@ -241,10 +249,11 @@ export default {
 .search-container {
   position: sticky;
   top: 0;
+  z-index: 900;  /* 이 값은 다른 요소보다 더 높게 설정 */
   background-color: white;
-  z-index: 900;
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0px; 
 }
 
 .dropdown {
@@ -326,12 +335,12 @@ export default {
 }
 
 .dark .crypto-table {
-  background-color: #444;  /* 테이블 배경 어두운 색 */
+  background-color: #363636;  /* 테이블 배경 어두운 색 */
   color: #fff;  /* 테이블 텍스트 색 흰색 */
 }
 
 .dark .search-container {
-  background-color: #555;  /* 검색창 배경 어두운 색 */
+  background-color: #252525;  /* 검색창 배경 어두운 색 */
   color: white;
 }
 
@@ -355,23 +364,23 @@ export default {
 
 /* 다크모드에서 테이블 헤더 스타일 */
 .dark .crypto-table th {
-  background-color: #444;  /* 어두운 배경색 */
+  background-color: #2e2e2e;  /* 어두운 배경색 */
   color: #fff;  /* 흰색 텍스트 */
 }
 
 .dark .crypto-table th.sortable:hover {
-  background-color: #555;  /* 호버 시 배경색을 조금 더 어두운 색으로 */
+  background-color: #646464;  /* 호버 시 배경색을 조금 더 어두운 색으로 */
 }
 
 /* 다크모드에서 테이블 항목 호버링 시 스타일 */
 .dark .crypto-table tbody tr:hover {
-  background-color: #555;  /* 어두운 배경색 */
+  background-color: #272727;  /* 어두운 배경색 */
   color: #fff;  /* 흰색 텍스트 */
 }
 
 /* 다크모드에서 선택된 항목의 스타일 */
 .dark .crypto-table .selected-coin {
-  background-color: #124b12;  /* 선택된 항목의 배경색 */
+  background-color: #723b3b;  /* 선택된 항목의 배경색 */
   color: #ffffff;  /* 선택된 항목의 텍스트 색 */
   font-weight: bold;  /* 글자 굵게 */
 }
