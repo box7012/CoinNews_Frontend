@@ -121,12 +121,13 @@ export default {
         const currentTime = new Date().toISOString();
 
         const messageData = {
-          user: user ? JSON.parse(user).username : "Unknown",
+          user: user ? JSON.parse(user).email : "Unknown",
           message: this.message,
           time: currentTime
         }
 
-        this.messages.push(messageData);
+        console.log(messageData);
+        // this.messages.push(messageData);
         this.socket.send(JSON.stringify(messageData));
         this.message = "";
       }
@@ -139,7 +140,8 @@ export default {
     this.socket = new WebSocket("ws://localhost:8080/chat");
 
     this.socket.onmessage = (event) => {
-      this.messages.push(event.data);
+      const parsedMessage = JSON.parse(event.data);
+      this.messages.push(parsedMessage);
     };
 
   }
