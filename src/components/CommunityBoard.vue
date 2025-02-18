@@ -51,9 +51,12 @@ export default {
     };
   },
   methods: {
+
     goToWritePage() {
+      console.log("뭐지");
       this.$router.push("/writepage");
     },
+
     async loadPosts() {
       try {
         const response = await axios.get("/api/posts");

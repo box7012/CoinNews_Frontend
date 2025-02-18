@@ -224,12 +224,12 @@ export default {
 }
 
 .crypto-table th {
-  background-color: #aac77c;
+  background-color: #ddf1de;
   font-weight: bold;
   position: sticky;
   top: 56px;  /* search-container 바로 아래로 위치 조정 */
   z-index: 500;  /* search-container보다 낮게 설정 */
-  border: 1px solid #ccc;
+  border: 3px solid #b5b9b0;
   margin: 12px;
   padding-top: 10px;
 }
@@ -251,7 +251,9 @@ export default {
   top: 0;
   z-index: 900;  /* 이 값은 다른 요소보다 더 높게 설정 */
   background-color: white;
-  padding: 10px;
+  
+  padding: 5px;
+  padding-bottom: 0px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-bottom: 0px; 
 }
