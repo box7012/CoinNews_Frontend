@@ -33,15 +33,10 @@
 
     <div class="board">
       <div class="chat-container">
-        <div class="messages">
-          <div v-for="(message, index) in messages" :key="index" class="message">
-            <strong>{{ message.sender }}:</strong> {{ message.text }}
-          </div>
+        <div class="chat-box">
+          <div v-for="(msg, index) in messages" :key="index" class="message">{{ msg }}</div>
         </div>
-        <div class="input-container">
-          <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="메시지를 입력하세요" />
-          <button @click="sendMessage">전송</button>
-        </div>
+        <input v-model="message" @keyup.enter="sendMessage" placeholder="메시지를 입력하세요..." />
       </div>
     </div>
   </div>
@@ -69,9 +64,8 @@ export default {
 
       // 웹 소켓 + 카프카 이용한 실시간 채팅용
       socket: null,
-      messages: [],
-      newMessage: "",
-      username: "user" + Math.floor(Math.random() * 1000),
+      message: "",
+      messages: []
 
     };
   },
@@ -108,28 +102,12 @@ export default {
       return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
     },
 
-    connectWebSocket() {
-      this.socket = new WebSocket("ws://localhost:8080/chat");
-      
-      this.socket.onmessage = (event) => {
-        const receivedMessage = JSON.parse(event.data);
-        this.messages.push(receivedMessage);
-      };
-      
-      this.socket.onclose = () => {
-        console.log("WebSocket 연결 종료됨");
-      };
-    },
     sendMessage() {
-      if (this.newMessage.trim() !== "") {
-        const message = {
-          sender: this.username,
-          text: this.newMessage,
-        };
-        this.socket.send(JSON.stringify(message));
-        this.newMessage = "";
+      if (this.message.trim() !== "") {
+        this.socket.send(this.message);
+        this.message = "";
       }
-    },
+    }
 
   },
   mounted() {
@@ -279,37 +257,25 @@ export default {
 }
 
 .chat-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
+  width: 300px;
+  margin: auto;
+  text-align: center;
+}
+.chat-box {
+  height: 300px;
+  overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;
-  background: #f9f9f9;
-}
-.messages {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
 }
 .message {
-  margin-bottom: 5px;
+  text-align: left;
+  background: #f1f1f1;
   padding: 5px;
-  background: #fff;
-  border-radius: 5px;
-}
-.input-container {
-  display: flex;
-  gap: 5px;
+  margin: 5px 0;
 }
 input {
-  flex-grow: 1;
-  padding: 5px;
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
 }
-button {
-  padding: 5px 10px;
-  cursor: pointer;
-}
-
 </style>
