@@ -34,7 +34,12 @@
     <div class="board">
       <div class="chat-container">
         <div class="chat-box">
-          <div v-for="(msg, index) in messages" :key="index" class="message">{{ msg }}</div>
+          <div v-for="(msg, index) in messages" :key="index" class="message">
+            <div class="message-header">
+              <span class="username">{{ msg.user }}</span> <span class="message-time">{{ formatChattingDate(msg.time) }}</span>
+            </div>
+            <div class="message-content">{{ msg.message }}</div>
+          </div>
         </div>
         <input v-model="message" @keyup.enter="sendMessage" placeholder="메시지를 입력하세요..." />
       </div>
@@ -97,6 +102,14 @@ export default {
       this.selectedPost = post;
     },
 
+    formatChattingDate(date) {
+      const d = new Date(date);
+      const hours = String(d.getHours()).padStart(2, '0');
+      const minutes = String(d.getMinutes()).padStart(2, '0');
+      const seconds = String(d.getSeconds()).padStart(2, '0');
+      return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${hours}:${minutes}:${seconds}`;
+    },
+
     formatDate(date) {
       const d = new Date(date);
       return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
@@ -104,7 +117,17 @@ export default {
 
     sendMessage() {
       if (this.message.trim() !== "") {
-        this.socket.send(this.message);
+        const user = localStorage.getItem("user");
+        const currentTime = new Date().toISOString();
+
+        const messageData = {
+          user: user ? JSON.parse(user).username : "Unknown",
+          message: this.message,
+          time: currentTime
+        }
+
+        this.messages.push(messageData);
+        this.socket.send(JSON.stringify(messageData));
         this.message = "";
       }
     }
@@ -260,7 +283,7 @@ export default {
 .close-button:hover {
   background-color: #0056b3;
 }
-
+/* 웹소켓 실시간 통신 */
 .chat-container {
   width: 300px;
   margin: auto;
@@ -283,4 +306,25 @@ input {
   padding: 10px;
   margin-top: 10px;
 }
+
+.message-header {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.username {
+  color: #4CAF50;
+  margin-right: 10px;
+}
+
+.message-time {
+  font-size: 0.8em;
+  color: #888;
+}
+
+.message-content {
+  margin-top: 5px;
+  padding-left: 10px;
+}
+
 </style>
