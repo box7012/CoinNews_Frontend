@@ -113,7 +113,12 @@ export default {
   mounted() {
     this.loadPosts();
 
-    this.connectWebSocket();
+    this.socket = new WebSocket("ws://localhost:8080/chat");
+
+    this.socket.onmessage = (event) => {
+      this.messages.push(event.data);
+    };
+
   }
 };
 </script>
