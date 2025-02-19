@@ -90,11 +90,26 @@ export default {
 
     async deletePost(postId) {
       if (!confirm("정말 삭제하시겠습니까?")) return;
+
       try {
-        await axios.delete(`/api/posts/${postId}`);
+        const token = localStorage.getItem("authToken"); // 인증 토큰 가져오기
+        const user = JSON.parse(localStorage.getItem("user")); // 유저 정보 가져오기
+
+        if (!user || !user.email) {
+          alert("로그인이 필요합니다.");
+          return;
+        }
+
+        await axios.delete(`/api/posts/${postId}?email=${encodeURIComponent(user.email)}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         this.posts = this.posts.filter(post => post.id !== postId);
       } catch (error) {
         console.error("Failed to delete post:", error);
+        alert(error.response?.data?.message || "삭제 실패");
       }
     },
 
