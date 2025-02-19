@@ -6,6 +6,8 @@
   </template>
   
   <script>
+  import axios from 'axios';
+  
   export default {
     data() {
       return {
@@ -17,12 +19,14 @@
       this.fetchPost(postId);
     },
     methods: {
-      fetchPost(id) {
-        const samplePosts = [
-          { id: "1", title: "첫 번째 게시글", content: "첫 번째 게시글 내용입니다." },
-          { id: "2", title: "두 번째 게시글", content: "두 번째 게시글 내용입니다." }
-        ];
-        this.post = samplePosts.find(post => post.id === id) || { title: "게시글 없음", content: "" };
+      async fetchPost(id) {
+        try {
+          const response = await axios.get(`http://localhost:8080/api/posts/${id}`);
+          this.post = response.data;
+        } catch (error) {
+          console.error("게시글을 불러오는 중 오류 발생:", error);
+          this.post = { title: "게시글 없음", content: "" };
+        }
       }
     }
   };
