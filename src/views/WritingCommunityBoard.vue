@@ -58,7 +58,6 @@ export default {
         const response = await axios.post(
           "/api/posts",
           {
-            email: this.newPost.email,
             title: this.newPost.title,
             text: this.newPost.text,
             create_date: new Date().toISOString(),

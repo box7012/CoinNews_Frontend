@@ -14,8 +14,9 @@
         <h3>댓글</h3>
         <ul v-if="comments.length">
           <li v-for="comment in comments" :key="comment.id" class="comment">
-            <strong>{{ comment.author }}</strong>
-            <p>{{ comment.content }}</p>
+            <strong>{{ comment.email }}</strong>
+            <p>{{ comment.text }}</p>
+            <p>{{ comment.createdAt }}</p>
           </li>
         </ul>
         <p v-else>댓글이 없습니다.</p>
@@ -24,7 +25,7 @@
       <!-- 댓글 입력 폼 -->
       <div class="comment-form">
         <h3>댓글 달기</h3>
-        <textarea v-model="newComment.content" placeholder="댓글 입력..." class="textarea"></textarea>
+        <textarea v-model="newComment.text" placeholder="댓글 입력..." class="textarea"></textarea>
         <button @click="submitComment" class="button">댓글 작성</button>
       </div>
     </div>
@@ -63,6 +64,7 @@
         try {
           const response = await axios.get(`http://localhost:8080/api/posts/${id}/comments`);
           this.comments = response.data;
+          console.log(this.comments);
         } catch (error) {
           console.error("댓글을 불러오는 중 오류 발생:", error);
         }
@@ -70,15 +72,18 @@
 
       async submitComment() {
         // 로그인 여부 확인
-        const isLoggedIn = localStorage.getItem('authToken'); // 예를 들어 'authToken'을 로그인 상태 표시로 사용
+        const authToken = localStorage.getItem('authToken'); // 로그인 토큰
+        const user = localStorage.getItem('user'); // 로그인된 사용자 ID
+        const email = JSON.parse(user).email;
 
-        if (!isLoggedIn) {
+        if (!authToken || !email) {
             alert("로그인 해주세요.");
             return;
         }
 
         // 댓글 내용 확인
-        if (!this.newComment.content) {
+        if (!this.newComment.text) {
+            console.log(this.newComment)
             alert("내용을 입력하세요.");
             return;
         }
@@ -86,17 +91,23 @@
         console.log(this.newComment);
 
         try {
-            const response = await axios.post(`http://localhost:8080/api/posts/${this.$route.params.id}/comments`, this.newComment, {
+            const response = await axios.post(`http://localhost:8080/api/posts/${this.$route.params.id}/comments`, {
+                email: email, // 사용자 ID 추가
+                text: this.newComment.text
+            }, {
             headers: {
-                'Authorization': `Bearer ${isLoggedIn}` // 로그인한 사용자의 토큰을 헤더에 추가
+                'Authorization': `Bearer ${authToken}` // 로그인 토큰을 헤더에 포함
             }
             });
+
             this.comments.push(response.data);
             this.newComment.content = ''; // 댓글 내용 초기화
+            // 화면 새로고침하기.. 굳이 싶긴하다..
         } catch (error) {
             console.error("댓글을 저장하는 중 오류 발생:", error);
         }
-    },
+      },
+
     }
   };
   </script>
