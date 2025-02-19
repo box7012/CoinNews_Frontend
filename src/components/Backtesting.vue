@@ -315,14 +315,14 @@
     padding: 0px;
     height: 1000px;
     max-height: 25000px;
-    background-color: #f5f5f5;
+    background-color: #ffffff;
     font-family: 'Arial', sans-serif;
     width: 1465px;
   }
   
   /* 왼쪽 패널 스타일 */
   .left-panel {
-    background-color: #ffffff;
+    background-color: #e8eee7;
     padding: 20px;
     border-radius: 10px;
     /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
@@ -429,7 +429,7 @@
   
   /* 중앙 패널 스타일 */
   .center-panel {
-    background-color: #ffffff;
+    background-color: #e8eee7;
     padding: 25px;
     border-radius: 10px;
     /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
@@ -438,7 +438,7 @@
 
     /* 오른쪽 패널 스타일 */
   .right-panel {
-    background-color: #ffffff;
+    background-color: #e8eee7;
     padding: 20px;
     border-radius: 10px;
     /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */

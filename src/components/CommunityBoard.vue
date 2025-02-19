@@ -17,7 +17,7 @@
           <tr v-for="post in posts" :key="post.id">
             <td>{{ post.id }}</td>
             <td>
-              <a href="#" @click.prevent="viewPost(post)" class="post-link">{{ post.title }}</a>
+              <router-link :to="'/post/' + post.id" class="post-link">{{ post.title }}</router-link>
             </td>
             <td>{{ post.email }}</td>
             <td>{{ formatDate(post.createdDate) }}</td>
