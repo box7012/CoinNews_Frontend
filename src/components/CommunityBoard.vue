@@ -1,38 +1,15 @@
 <template>
   <div class="board-container">
-    <div class="board">
-      <h1 class="title">게시판 1</h1>
-
-      <table class="post-table">
-        <thead>
-          <tr>
-            <th class="col-id">순번</th>
-            <th class="col-title">제목</th>
-            <th class="col-author">등록자명</th>
-            <th class="col-date">등록일자</th>
-            <th class="col-action">삭제</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="post in posts" :key="post.id">
-            <td>{{ post.id }}</td>
-            <td>
-              <router-link :to="'/post/' + post.id" class="post-link">{{ post.title }}</router-link>
-            </td>
-            <td>{{ post.email }}</td>
-            <td>{{ formatDate(post.createdDate) }}</td>
-            <td>
-              <button @click="deletePost(post.id)" class="delete-button">삭제</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <button @click="goToWritePage" class="write-button">글쓰기</button>
-    </div>
-
-    <div class="board">
-      <div class="chat-container">
+    <div class="top-section">
+      <div class="left-section">
+        <div class="board small-board">
+          <h1 class="title">게시판 2</h1>
+        </div>
+        <div class="board small-board">
+          <h1 class="title">게시판 3</h1>
+        </div>
+      </div>
+      <div class="board chat-container">
         <div class="chat-box">
           <div v-for="(msg, index) in messages" :key="index" class="message">
             <div class="message-header">
@@ -44,17 +21,40 @@
         <input v-model="message" @keyup.enter="sendMessage" placeholder="메시지를 입력하세요..." />
       </div>
     </div>
-  </div>
 
-  <!-- 게시글 상세 보기 모달 -->
-  <div v-if="selectedPost" class="modal">
-    <div class="modal-content">
-      <h2>{{ selectedPost.title }}</h2>
-      <p>{{ selectedPost.content }}</p>
-      <button @click="selectedPost = null" class="close-button">닫기</button>
+    <div class="board large-board">
+      <h1 class="title">게시판 1</h1>
+      <table class="post-table">
+        <thead>
+          <tr>
+            <th class="col-id">순번</th>
+            <th class="col-title">제목</th>
+            <th class="col-author">등록자명</th>
+            <th class="col-date">등록일자</th>
+            <th class="col-views">조회수</th>
+            <!-- <th class="col-action">삭제</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="post in posts" :key="post.id">
+            <td>{{ post.id }}</td>
+            <td>
+              <router-link :to="'/post/' + post.id" class="post-link">{{ post.title }}</router-link>
+            </td>
+            <td>{{ post.email }}</td>
+            <td>{{ formatDate(post.createdDate) }}</td>
+            <td>{{ post.views }}</td>
+            <!-- <td>
+              <button @click="deletePost(post.id)" class="delete-button">삭제</button>
+            </td> -->
+          </tr>
+        </tbody>
+      </table>
+      <button @click="goToWritePage" class="write-button">글쓰기</button>
     </div>
   </div>
 </template>
+
 
 <script>
 import axios from "axios";
@@ -166,21 +166,51 @@ export default {
 <style scoped>
 .board-container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 20px;
   height: 800px;
 }
 
-.board:first-child {
-  width: 70%;
+.top-section {
+  display: flex;
+  gap: 20px;
+  margin: 0 auto;
+  width: 80%;
+  min-width: 1020px;
 }
 
-.board:last-child {
-  width: 30%;
+.left-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 70%; /* 7 */
+  min-width: 660px;
+}
+
+.chat-container {
+  width: 30%; /* 3 */
+  min-width: 340px;
+  height: 600px;
+}
+
+.large-board {
+  width: 80%;
+  margin: 0 auto; /* 중앙 정렬 */
+  max-width: 1520px;
+  min-width: 1020px;
+}
+
+.small-board {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  height: 290px;
 }
 
 .board {
-  width: 48%;
   padding: 30px;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -189,14 +219,13 @@ export default {
 }
 
 .title {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: bold;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   text-align: center;
   color: #333;
 }
 
-/* 테이블 스타일 */
 .post-table {
   width: 100%;
   border-collapse: collapse;
@@ -204,7 +233,7 @@ export default {
 }
 
 .post-table th, .post-table td {
-  padding: 16px;
+  padding: 4px;
   border: 1px solid #f2f2f2;
   text-align: center;
   font-size: 16px;
@@ -215,11 +244,16 @@ export default {
   color: #555;
 }
 
+.post-table tbody td:nth-child(2),
+.post-table tbody td:nth-child(3) {
+  text-align: left;
+}
+
 .col-id { width: 10%; }
 .col-title { width: 40%; }
 .col-author { width: 20%; }
 .col-date { width: 20%; }
-.col-action { width: 10%; }
+.col-views { width: 10%; }
 
 .post-link {
   color: #007bff;
@@ -264,28 +298,6 @@ export default {
   background-color: #218838;
 }
 
-/* 모달 스타일 */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background: white;
-  padding: 30px;
-  border-radius: 8px;
-  width: 400px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
 .close-button {
   margin-top: 20px;
   padding: 10px 15px;
@@ -306,8 +318,9 @@ export default {
   margin: auto;
   text-align: center;
 }
+
 .chat-box {
-  height: 300px;
+  height: 500px;
   overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;
