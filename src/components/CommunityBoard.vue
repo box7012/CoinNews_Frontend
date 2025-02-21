@@ -4,6 +4,22 @@
       <div class="left-section">
         <div class="board small-board">
           <h1 class="title">게시판 2</h1>
+          <div class="top-posts-container">
+            <ul class="top-posts-list">
+              <li v-for="post in topLeftPosts" :key="post.id">
+                <router-link :to="'/post/' + post.id">
+                  {{ post.title }}
+                </router-link>
+              </li>
+            </ul>
+            <ul class="top-posts-list">
+              <li v-for="post in topRightPosts" :key="post.id">
+                <router-link :to="'/post/' + post.id">
+                  {{ post.title }}
+                </router-link>
+              </li>
+            </ul>
+          </div>
         </div>
         <div class="board small-board">
           <h1 class="title">게시판 3</h1>
@@ -24,6 +40,14 @@
 
     <div class="board large-board">
       <h1 class="title">게시판 1</h1>
+      <div class="pagination-controls">
+        <label for="postsPerPage">페이지당 게시글 수:</label>
+        <select id="postsPerPage" v-model="postsPerPage" @change="changePostsPerPage">
+          <option :value="10">10개</option>
+          <option :value="20">20개</option>
+          <option :value="50">50개</option>
+        </select>
+      </div>
       <table class="post-table">
         <thead>
           <tr>
@@ -36,7 +60,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="post in posts" :key="post.id">
+          <tr v-for="post in paginatedPosts" :key="post.id">
             <td>{{ post.id }}</td>
             <td>
               <router-link :to="'/post/' + post.id" class="post-link">{{ post.title }}</router-link>
@@ -50,6 +74,30 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- <div class="pagination">
+          <button @click="changePage(page)"
+                  v-for="page in totalPages"
+                  :key="page"
+                  :class="{ active: page === currentPage }">
+            {{ page }}
+          </button>
+      </div> -->
+
+      <div class="pagination">
+        <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1">
+          &lt; <!-- 이전 페이지 버튼 -->
+        </button>
+
+        <button v-for="page in pageRange" :key="page" @click="changePage(page)" :class="{ active: page === currentPage }">
+          {{ page }}
+        </button>
+
+        <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">
+          &gt; <!-- 다음 페이지 버튼 -->
+        </button>
+      </div>
+
       <button @click="goToWritePage" class="write-button">글쓰기</button>
     </div>
   </div>
@@ -58,6 +106,7 @@
 
 <script>
 import axios from "axios";
+import { mapActions, mapState } from 'vuex';
 
 export default {
   data() {
@@ -70,11 +119,77 @@ export default {
       // 웹 소켓 + 카프카 이용한 실시간 채팅용
       socket: null,
       message: "",
-      messages: []
+      messages: [],
+
+      currentPage: 1,
+      postsPerPage: 10,
 
     };
   },
+
+  watch: {
+      isDarkMode(newValue) {
+        const appElement = document.querySelector('#app');
+        const bodyElement = document.body;
+        if (newValue) {
+          appElement.classList.add('dark');
+          bodyElement.classList.add('dark');
+        } else {
+          appElement.classList.remove('dark');
+          bodyElement.classList.remove('dark');
+        }
+      },
+    },
+
+  computed: {
+
+    ...mapState(['isDarkMode']), // Vuex 상태 매핑
+
+    totalPages() {
+      return Math.ceil(this.posts.length / this.postsPerPage);
+    },
+
+    paginatedPosts() {
+      const start = (this.currentPage - 1) * this.postsPerPage;
+      return this.posts.slice(start, start + this.postsPerPage);
+    },
+
+    topLeftPosts() {
+      return [...this.posts]
+        .sort((a, b) => b.views - a.views)
+        .slice(0, 5);
+    },
+
+    topRightPosts() {
+      return [...this.posts]
+        .sort((a, b) => b.views - a.views)
+        .slice(5, 10);
+    },
+
+        // 페이지 범위를 계산하여 10개씩 그룹화
+    pageRange() {
+      const startPage = Math.floor((this.currentPage - 1) / 10) * 10 + 1;
+      const endPage = Math.min(startPage + 9, this.totalPages);
+
+      const range = [];
+      for (let i = startPage; i <= endPage; i++) {
+        range.push(i);
+      }
+      return range;
+    },
+
+
+  },
+
   methods: {
+
+    ...mapActions(['toggleDarkMode']), // Vuex 액션 매핑
+
+    changePage(page) {
+      if (page < 1 || page > this.totalPages) return;
+      this.currentPage = page;
+    },
+
     goToWritePage() {
       this.$router.push("/writepage");
     },
@@ -82,10 +197,18 @@ export default {
     async loadPosts() {
       try {
         const response = await axios.get("/api/posts");
-        this.posts = response.data;
+        this.posts = response.data.reverse();
       } catch (error) {
         console.error("Failed to load posts:", error);
       }
+    },
+
+    changePage(page) {
+      this.currentPage = page;
+    },
+
+    changePostsPerPage() {
+      this.currentPage = 1;
     },
 
     async deletePost(postId) {
@@ -159,11 +282,49 @@ export default {
       this.messages.push(parsedMessage);
     };
 
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    this.$store.dispatch('updateDarkMode', darkMode); // 초기 다크 모드 상태 설정
   }
 };
 </script>
 
 <style scoped>
+
+/* 조회수 top 게시판 */
+.top-posts-container {
+  display: flex;
+  gap: 16px; /* 간격 추가 */
+}
+
+.top-posts-list {
+  list-style-type: none;
+  flex: 1;
+  padding: 0;
+}
+
+.top-posts-list li {
+  background: #f8f9fa; /* 연한 회색 배경 */
+  padding: 5px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: left;
+}
+
+.top-posts-list li:hover {
+  transform: translateY(-3px);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.top-posts-list li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  display: block;
+}
+/* 조회수 top 게시판 */
+
 .board-container {
   display: flex;
   flex-direction: column;
@@ -281,17 +442,16 @@ export default {
 
 /* 글쓰기 버튼 */
 .write-button {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  margin-top: 30px;
+  padding: 10px 20px; /* 패딩을 줄여서 크기 줄이기 */
   background-color: #28a745;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px; /* 글씨 크기 줄이기 */
   transition: background-color 0.3s;
+  float: right; /* 오른쪽 정렬 */
+  width: auto; /* 너비 자동 설정 */
 }
 
 .write-button:hover {
@@ -357,4 +517,399 @@ input {
   padding-left: 10px;
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+.pagination button {
+  margin: 0 4px;
+  padding: 3px 7px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 5px;
+  color: #000;
+}
+.pagination button.active {
+  background: #f8f8f8;
+  color: rgb(0, 0, 0);
+  border: 2px solid #000;
+}
+
+
+/* 기존 스타일 유지 */
+.top-posts-container {
+  display: flex;
+  gap: 16px;
+}
+
+.top-posts-list {
+  list-style-type: none;
+  flex: 1;
+  padding: 0;
+}
+
+.top-posts-list li {
+  background: #f8f9fa;
+  padding: 5px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: left;
+}
+
+.top-posts-list li:hover {
+  transform: translateY(-3px);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.top-posts-list li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  display: block;
+}
+
+/* 나머지 기존 스타일들 */
+.board-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 800px;
+}
+
+.top-section {
+  display: flex;
+  gap: 20px;
+  margin: 0 auto;
+  width: 80%;
+  min-width: 1020px;
+}
+
+.left-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 70%;
+  min-width: 660px;
+}
+
+.chat-container {
+  width: 30%;
+  min-width: 340px;
+  height: 600px;
+}
+
+.large-board {
+  width: 80%;
+  margin: 0 auto;
+  max-width: 1520px;
+  min-width: 1020px;
+}
+
+.small-board {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  height: 290px;
+}
+
+.board {
+  padding: 30px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.post-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.post-table th, .post-table td {
+  padding: 4px;
+  border: 1px solid #f2f2f2;
+  text-align: center;
+  font-size: 16px;
+}
+
+.post-table th {
+  background-color: #f8f8f8;
+  color: #555;
+}
+
+.post-table tbody td:nth-child(2),
+.post-table tbody td:nth-child(3) {
+  text-align: left;
+}
+
+.col-id { width: 10%; }
+.col-title { width: 40%; }
+.col-author { width: 20%; }
+.col-date { width: 20%; }
+.col-views { width: 10%; }
+
+.post-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.post-link:hover {
+  text-decoration: underline;
+}
+
+.delete-button {
+  padding: 8px 12px;
+  background-color: #ff6f61;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+  background-color: #e04e3b;
+}
+
+.close-button {
+  margin-top: 20px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.close-button:hover {
+  background-color: #0056b3;
+}
+
+.chat-container {
+  width: 300px;
+  margin: auto;
+  text-align: center;
+}
+
+.chat-box {
+  height: 500px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.message {
+  text-align: left;
+  background: #f1f1f1;
+  padding: 5px;
+  margin: 5px 0;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.message-header {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.username {
+  color: #4CAF50;
+  margin-right: 10px;
+}
+
+.message-time {
+  font-size: 0.8em;
+  color: #888;
+}
+
+.message-content {
+  margin-top: 5px;
+  padding-left: 10px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.pagination button {
+  margin: 0 4px;
+  padding: 3px 7px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 5px;
+  color: #000;
+}
+
+.pagination button.active {
+  background: #f8f8f8;
+  color: rgb(0, 0, 0);
+  border: 2px solid #000;
+}
+
+.dark {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.dark .top-posts-list li{
+  background: #3b3b3b; /* 다크 모드에서 연한 회색 배경 */
+  color: #ffffff;
+  
+}
+
+.dark .top-posts-list li a{
+  background: #3b3b3b; /* 다크 모드에서 연한 회색 배경 */ 
+  color: #d3d3d3;
+}
+
+.dark .top-posts-list {
+  background: #2a2a2a; /* 다크 모드에서 연한 회색 배경 */ 
+}
+
+
+.dark .top-posts-list li:hover {
+  background: #3b3b3b; /* 다크 모드에서 hover 효과 */
+  transform: translateY(-3px);
+  box-shadow: 4px 4px 10px rgba(255, 255, 255, 0.15);
+}
+
+.dark .post-table th {
+  background-color: #2e2e2e;
+  color: #ddd;
+}
+
+.dark .post-table tbody td {
+  background-color: #2e2e2e;
+  color: #ddd;
+}
+
+.dark .post-link {
+  color: #56a0ff;
+}
+
+.dark .write-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.dark .write-button:hover {
+  background-color: #45a049;
+}
+
+.dark .close-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.dark .close-button:hover {
+  background-color: #0056b3;
+}
+
+.dark .pagination button {
+  background: #333;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+.dark .pagination button.active {
+  background: #444;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+}
+
+.dark .delete-button {
+  background-color: #ff6f61;
+  color: white;
+}
+
+.dark .delete-button:hover {
+  background-color: #e04e3b;
+}
+
+.dark .message {
+  background: #3e3e3e;
+  color: #ffffff;
+}
+
+.dark .message-time {
+  color: #bbb;
+}
+
+/* 게시판 및 실시간 채팅 패널 다크 모드 배경 추가 */
+.dark .board-container {
+  background-color: #1b1b1b;
+}
+
+.dark .top-section {
+  background-color: #1b1b1b;
+}
+
+.dark .left-section {
+  background-color: #1b1b1b;
+}
+
+.dark .chat-container {
+  background-color: #2a2a2a;
+}
+
+.dark .large-board {
+  background-color: #2a2a2a;
+}
+
+.dark .small-board {
+  background-color: #2a2a2a;
+  color: #ffffff;
+}
+
+.dark .title {
+  color: #ffffff;
+}
+
+.dark .li {
+  color: #ffffff;
+}
+
+
+/* 글쓰기 버튼 */
+.write-button {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px; 
+  transition: background-color 0.3s;
+  float: right; 
+  width: auto; 
+}
+
+.write-button:hover {
+  background-color: #218838;
+}
 </style>

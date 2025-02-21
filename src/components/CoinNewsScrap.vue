@@ -20,6 +20,7 @@
   
   <script>
   import axios from 'axios';
+  import { mapActions, mapState } from 'vuex';
   
   export default {
     data() {
@@ -28,8 +29,29 @@
         news: [],
       };
     },
-  
+
+    watch: {
+      isDarkMode(newValue) {
+        const appElement = document.querySelector('#app');
+        const bodyElement = document.body;
+        if (newValue) {
+          appElement.classList.add('dark');
+          bodyElement.classList.add('dark');
+        } else {
+          appElement.classList.remove('dark');
+          bodyElement.classList.remove('dark');
+        }
+      },
+    },
+
+    computed: {
+      ...mapState(['isDarkMode']), // Vuex 상태 매핑
+    },
+
     methods: {
+
+      ...mapActions(['toggleDarkMode']), // Vuex 액션 매핑
+
       async searchNews() {
         try {
           if (!this.searchQuery.trim()) {
@@ -71,6 +93,8 @@
   
     mounted() {
       this.startmessagePolling();
+      const darkMode = localStorage.getItem('darkMode') === 'true';
+      this.$store.dispatch('updateDarkMode', darkMode); // 초기 다크 모드 상태 설정
     }
   };
   </script>
@@ -146,5 +170,48 @@
       transform: translateY(2px);
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
+
+    /* 다크 모드 스타일 */
+.dark .news-list {
+  color: #ffffff; /* 글자 색을 흰색으로 변경 */
+}
+
+.dark .news-list li {
+  background-color: #2c2c2c; /* 항목 배경을 어두운 색으로 변경 */
+  color: #ffffff; /* 글자 색을 흰색으로 변경 */
+}
+
+.dark .header {
+  background-color: #1b1b1b; /* 헤더 배경을 어두운 색으로 변경 */
+  color: #ffffff; /* 글자 색을 흰색으로 변경 */
+}
+
+.dark h1 {
+  color: #4C91F1; /* 제목 색상 */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* 어두운 배경에서 글씨를 더 돋보이게 */
+}
+
+.dark .search-bar input {
+  background-color: #333333; /* 입력 필드 배경을 어두운 색으로 변경 */
+  color: #ffffff; /* 입력 필드 글자 색을 흰색으로 변경 */
+  border: 1px solid #444444; /* 입력 필드 테두리 색 변경 */
+}
+
+.dark .search-bar button {
+  background-color: #4C91F1; /* 버튼 색상을 유지 */
+  color: white;
+}
+
+.dark .search-bar button:hover {
+  background-color: #3b7cd7;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3); /* 그림자 효과 강화 */
+}
+
+.dark .search-bar button:active {
+  transform: translateY(2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* 클릭 시 그림자 효과 강화 */
+}
+
   </style>
   

@@ -36,6 +36,7 @@
 
 <script>
 import axios from 'axios';
+import { mapActions, mapState } from 'vuex';
 
 export default {
   data() {
@@ -45,7 +46,28 @@ export default {
     };
   },
 
+  watch: {
+    isDarkMode(newValue) {
+      const appElement = document.querySelector('#app');
+      const bodyElement = document.body;
+      if (newValue) {
+        appElement.classList.add('dark');
+        bodyElement.classList.add('dark');
+      } else {
+        appElement.classList.remove('dark');
+        bodyElement.classList.remove('dark');
+      }
+    },
+  },
+
+  computed: {
+    ...mapState(['isDarkMode']), // Vuex 상태 매핑
+  },
+
   methods: {
+
+    ...mapActions(['toggleDarkMode']),
+
     async searchNews() {
       try {
         if (!this.searchQuery.trim()) {
@@ -101,12 +123,14 @@ export default {
 
   mounted() {
     this.startmessagePolling();
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    this.$store.dispatch('updateDarkMode', darkMode); // 초기 다크 모드 상태 설정
   }
 };
 </script>
 
 <style scoped>
-/* 전체 레이아웃 정리 */
+/* 기본 스타일 */
 .header {
   display: flex;
   justify-content: space-between;
@@ -121,12 +145,14 @@ export default {
   gap: 8px;
 }
 
+/* .search-bar 내부의 input에 대해서는 width를 auto로 오버라이드 */
 .search-bar input {
   padding: 8px;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   flex: 1;
+  width: auto !important;
 }
 
 .search-button,
@@ -153,14 +179,13 @@ export default {
 .clear-button:active {
   transform: scale(0.9);
 }
-
-input {
+/* input {
   padding: 8px;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 200px;
-}
+} */
 
 button {
   background-color: #4C91F1;
@@ -180,21 +205,23 @@ button:hover {
 button:active {
   transform: scale(0.95);
 }
+
 .news-container {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .news-time-column {
-    width: 150px; /* 고정된 시간 컬럼 */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start; /* 시간 텍스트 왼쪽 정렬 */
-    padding-right: 20px;
-    border-right: 2px solid #ddd;
-  }
-  .news-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.news-time-column {
+  width: 150px; /* 고정된 시간 컬럼 */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start; /* 시간 텍스트 왼쪽 정렬 */
+  padding-right: 20px;
+  border-right: 2px solid #ddd;
+}
+
+.news-item {
   display: flex;
   align-items: center; /* 세로로 중앙 정렬 */
   border-bottom: 1px solid #ddd;
@@ -218,25 +245,75 @@ button:active {
   font-size: 16px;
   font-weight: bold;
   text-align: left;
-
 }
-  
+
 .news-title a {
-  color: #000000; /* 노란색 */
+  color: #000000; /* 기본 색상 */
   text-decoration: none; /* 링크 밑줄 제거 */
 }
 
 .news-title a:hover {
   color: #aa4e4e; /* 클릭 시 보라색 */
 }
-  .news-preview {
-    font-size: 14px;
-    color: #6f6f6f;
-  }
-  
-  .preview-text {
-    font-size: 14px;
-    color: #6f6f6f;
-  }
 
+.news-preview {
+  font-size: 14px;
+  color: #6f6f6f;
+}
+
+.preview-text {
+  font-size: 14px;
+  color: #6f6f6f;
+}
+
+/* 다크 모드 스타일 */
+.dark .header {
+  background-color: #2c2c2c; /* 헤더 배경 어두운 색 */
+  color: #ffffff; /* 글자 색 흰색 */
+  border-bottom: 2px solid #444444; /* 헤더 밑의 선 색 변경 */
+}
+
+.dark .search-bar input {
+  background-color: #333333; /* 입력 필드 배경 어두운 색 */
+  color: #ffffff; /* 글자 색 흰색 */
+  border: 1px solid #444444; /* 입력 필드 테두리 색 변경 */
+}
+
+.dark .search-button,
+.dark .clear-button {
+  background-color: #444444; /* 버튼 배경 색 어두운 색 */
+  color: white;
+  border: 2px solid #666666; /* 버튼 테두리 색 변경 */
+}
+
+.dark .search-button:hover,
+.dark .clear-button:hover {
+  background-color: #555555; /* 버튼 hover 시 배경 색 */
+}
+
+.dark .news-container {
+  background-color: #1b1b1b; /* 뉴스 컨테이너 배경 어두운 색 */
+}
+
+.dark .news-item {
+  background-color: #2c2c2c; /* 뉴스 항목 배경 어두운 색 */
+  border-bottom: 1px solid #444444; /* 항목 밑 선 색 */
+}
+
+.dark .news-time {
+  color: #aaa; /* 시간 색상 연한 회색 */
+}
+
+.dark .news-title a {
+  color: #ffffff; /* 링크 색상 흰색 */
+}
+
+.dark .news-title a:hover {
+  color: #aa4e4e; /* 클릭 시 보라색 */
+}
+
+.dark .news-preview,
+.dark .preview-text {
+  color: #999; /* 텍스트 색상 연한 회색 */
+}
 </style>
