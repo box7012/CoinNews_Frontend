@@ -385,8 +385,4 @@ export default {
 }
 
 
-.crypto-table tr {
-  padding: 2210px;
-}
-
 </style>

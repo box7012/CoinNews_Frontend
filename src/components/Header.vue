@@ -144,17 +144,10 @@ body.dark .login-btn:hover, body.dark .toggle-dark-mode:hover {
     margin-bottom: 0px;
 }
 
-@media (max-width: 768px) {
-.header {
-    flex-direction: column;
-    align-items: flex-start;
-}
-
 .header h1 {
     margin-bottom: 10px;
 }
 
-}
 
 /* #app에 대한 배경색 설정 */
 #app {

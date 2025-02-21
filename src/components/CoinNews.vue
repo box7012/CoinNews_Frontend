@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div class="news">
     <div class="news-header">
       <h1>뉴스</h1>
       <div class="search-bar">
@@ -116,16 +116,27 @@ export default {
 
 <style scoped>
 
+#app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.news {
+  width: 80%;
+  margin: 1680px auto 0; /* 위쪽 여백 180px, 좌우 중앙 정렬 */
+  border-radius: 15px; /* 둥근 테두리 */
+}
 
 .news-header {
-
-  margin-top: 1600px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
   border-bottom: 2px solid #ddd;
-  position: relative;
+  border-radius: 15px; /* 둥근 테두리 */
 }
 
 .search-bar {
@@ -191,8 +202,10 @@ button:active {
 }
 
 .news-container {
+  position: relative;
   display: flex;
   flex-direction: column;
+  border-radius: 15px;
 }
 
 .news-time-column {
@@ -210,6 +223,7 @@ button:active {
   align-items: center; /* 세로로 중앙 정렬 */
   border-bottom: 1px solid #ddd;
   padding: 10px;
+  border-radius: 15px;
 }
 
 .news-time {
@@ -251,7 +265,7 @@ button:active {
 }
 
 /* 다크 모드 스타일 */
-.dark .header {
+.dark .news-header {
   background-color: #2c2c2c; /* 헤더 배경 어두운 색 */
   color: #ffffff; /* 글자 색 흰색 */
   border-bottom: 2px solid #444444; /* 헤더 밑의 선 색 변경 */

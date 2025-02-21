@@ -25,11 +25,10 @@ export default {
 </script>
 
 <style>
-
 #app {
   display: flex;
   flex-direction: column; /* 자식 요소를 세로로 정렬 */
-  justify-content: center; /* 세로 중앙 정렬 */
+
   align-items: center; /* 가로 중앙 정렬 */
   height: 100vh;
 }
@@ -42,6 +41,7 @@ export default {
   box-sizing: border-box;
   justify-content: center; /* 가로 중앙 정렬 */
   align-items: center; /* 가로 중앙 정렬 */
+  min-width: 1400px;
 
 }
 /* 다크모드 스타일 */

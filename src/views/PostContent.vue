@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="post-container">
     <div class="post-card">
       <h1 class="title">{{ post.title }}</h1>
       <div class="post-info">
@@ -7,7 +7,7 @@
         <span class="date">📅 {{ post.createdDate }}</span>
         <span class="views">👀 {{ post.views }}</span>
       </div>
-      <p class="content">{{ post.text }}</p>
+      <p class="text">{{ post.text }}</p>
     </div>
 
     <!-- 댓글 목록 -->
@@ -131,9 +131,11 @@ export default {
 </script>
 
 <style scoped>
-.container {
+
+.post-container {
+  position: relative;
   max-width: 1000px;
-  margin: 0 auto;
+  top: -100px;
   padding: 20px;
   font-family: 'Noto Sans KR', sans-serif;
   border-radius: 15px;
@@ -141,6 +143,7 @@ export default {
 
 /* 게시글 카드 */
 .post-card {
+  
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -165,7 +168,7 @@ export default {
   color: #777;
 }
 
-.content {
+.text {
   padding-top: 30px;
   font-size: 16px;
   line-height: 1.6;
@@ -304,7 +307,7 @@ export default {
   color: #e0e0e0;
 }
 
-.dark .container {
+.dark .post-container {
   background: #1e1e1e;
 }
 
@@ -322,7 +325,7 @@ export default {
   color: #b0b0b0;
 }
 
-.dark .content {
+.dark .text {
   color: #d0d0d0;
 }
 

@@ -320,6 +320,7 @@ export default {
   gap: 20px;
   height: 800px;
   margin-top: -150px;
+  
 }
 
 .top-section {
