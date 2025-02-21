@@ -33,6 +33,7 @@ export default {
 </script>
 
 <style scoped>
+
 .app {
   transition: background-color 0.3s, color 0.3s;
 }
@@ -48,6 +49,8 @@ export default {
   grid-template-rows: 450px 500px;
   gap: 10px;
   height: 100vh;
+  margin: auto;
+  margin-top: 0px;
 }
 
 .dashboard-frame-item {

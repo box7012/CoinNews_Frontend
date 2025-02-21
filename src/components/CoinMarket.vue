@@ -208,11 +208,8 @@ export default {
   width: 100%;
   margin: 0px;
   padding-top: 0px;
-  /* border-collapse: separate; */
   border-spacing: 0 10px;
   background-color: #fff;
-  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
-  /* border-radius: 10px; */
 }
 
 .crypto-table th,
@@ -248,7 +245,7 @@ export default {
 
 .search-container {
   position: sticky;
-  top: 0;
+  top: 0px;
   z-index: 900;  /* 이 값은 다른 요소보다 더 높게 설정 */
   background-color: white;
   
@@ -385,6 +382,11 @@ export default {
   background-color: #723b3b;  /* 선택된 항목의 배경색 */
   color: #ffffff;  /* 선택된 항목의 텍스트 색 */
   font-weight: bold;  /* 글자 굵게 */
+}
+
+
+.crypto-table tr {
+  padding: 2210px;
 }
 
 </style>

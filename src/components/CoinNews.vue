@@ -1,6 +1,7 @@
+
 <template>
   <div>
-    <div class="header">
+    <div class="news-header">
       <h1>뉴스</h1>
       <div class="search-bar">
         <input v-model="searchQuery" placeholder="검색어를 입력하세요" />
@@ -11,12 +12,10 @@
 
     <div class="news-container">
       <div v-for="information in news" :key="information.id" class="news-item">
-        <!-- 시간 부분을 컬럼처럼 처리 -->
         <div class="news-time-column">
           <div class="news-time">{{ formatDate(information.date) }}</div>
         </div>
 
-        <!-- 제목과 내용 -->
         <div class="news-details">
           <div class="news-title">
             <a :href="information.link" target="_blank" rel="noopener noreferrer">
@@ -24,7 +23,6 @@
             </a>
           </div>
 
-          <!-- 앞부분 100글자만 회색으로 표시 -->
           <div class="news-preview">
             <span class="preview-text">{{ information.title.substring(0, 100) }}...</span>
           </div>
@@ -46,23 +44,10 @@ export default {
     };
   },
 
-  watch: {
-    isDarkMode(newValue) {
-      const appElement = document.querySelector('#app');
-      const bodyElement = document.body;
-      if (newValue) {
-        appElement.classList.add('dark');
-        bodyElement.classList.add('dark');
-      } else {
-        appElement.classList.remove('dark');
-        bodyElement.classList.remove('dark');
-      }
-    },
+  computed: {
+    ...mapState(['isDarkMode']), // Vuex 상태에서 다크모드 값 가져옴
   },
 
-  computed: {
-    ...mapState(['isDarkMode']), // Vuex 상태 매핑
-  },
 
   methods: {
 
@@ -130,13 +115,17 @@ export default {
 </script>
 
 <style scoped>
-/* 기본 스타일 */
-.header {
+
+
+.news-header {
+
+  margin-top: 1600px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
   border-bottom: 2px solid #ddd;
+  position: relative;
 }
 
 .search-bar {
@@ -152,7 +141,8 @@ export default {
   border: 1px solid #ccc;
   border-radius: 4px;
   flex: 1;
-  width: auto !important;
+  min-width: 150px;
+  width: auto !important; /* 전역 규칙의 width를 덮어씀 */
 }
 
 .search-button,
@@ -168,6 +158,7 @@ export default {
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .search-button:hover,
@@ -179,13 +170,6 @@ export default {
 .clear-button:active {
   transform: scale(0.9);
 }
-/* input {
-  padding: 8px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 200px;
-} */
 
 button {
   background-color: #4C91F1;

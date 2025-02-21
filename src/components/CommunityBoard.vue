@@ -3,7 +3,7 @@
     <div class="top-section">
       <div class="left-section">
         <div class="board small-board">
-          <h1 class="title">게시판 2</h1>
+          <h1 class="title">인기 게시글</h1>
           <div class="top-posts-container">
             <ul class="top-posts-list">
               <li v-for="post in topLeftPosts" :key="post.id">
@@ -21,9 +21,6 @@
             </ul>
           </div>
         </div>
-        <div class="board small-board">
-          <h1 class="title">게시판 3</h1>
-        </div>
       </div>
       <div class="board chat-container">
         <div class="chat-box">
@@ -39,14 +36,16 @@
     </div>
 
     <div class="board large-board">
-      <h1 class="title">게시판 1</h1>
-      <div class="pagination-controls">
-        <label for="postsPerPage">페이지당 게시글 수:</label>
-        <select id="postsPerPage" v-model="postsPerPage" @change="changePostsPerPage">
-          <option :value="10">10개</option>
-          <option :value="20">20개</option>
-          <option :value="50">50개</option>
-        </select>
+      <div class="board-header">
+        <h1 class="title">게시글 목록</h1>
+        <div class="pagination-controls">
+          <label for="postsPerPage">페이지당 게시글 수 : </label>
+          <select id="postsPerPage" v-model="postsPerPage" @change="changePostsPerPage">
+            <option :value="10">10개</option>
+            <option :value="20">20개</option>
+            <option :value="50">50개</option>
+          </select>
+        </div>
       </div>
       <table class="post-table">
         <thead>
@@ -302,16 +301,6 @@ export default {
   padding: 0;
 }
 
-.top-posts-list li {
-  background: #f8f9fa; /* 연한 회색 배경 */
-  padding: 5px;
-  margin-bottom: 8px;
-  border-radius: 8px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  text-align: left;
-}
-
 .top-posts-list li:hover {
   transform: translateY(-3px);
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
@@ -330,6 +319,7 @@ export default {
   flex-direction: column;
   gap: 20px;
   height: 800px;
+  margin-top: -150px;
 }
 
 .top-section {
@@ -345,6 +335,7 @@ export default {
   flex-direction: column;
   gap: 20px;
   width: 70%; /* 7 */
+  flex-grow: 7;
   min-width: 660px;
 }
 
@@ -368,7 +359,7 @@ export default {
   background-color: #ffffff;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
   text-align: center;
-  height: 290px;
+  height: 600ㅔㅌ;
 }
 
 .board {
@@ -377,14 +368,6 @@ export default {
   border-radius: 10px;
   background-color: #ffffff;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-}
-
-.title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-align: center;
-  color: #333;
 }
 
 .post-table {
@@ -550,6 +533,12 @@ input {
   padding: 0;
 }
 
+.board-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .top-posts-list li {
   background: #f8f9fa;
   padding: 5px;
@@ -599,7 +588,7 @@ input {
 .chat-container {
   width: 30%;
   min-width: 340px;
-  height: 600px;
+  height: 450px;
 }
 
 .large-board {
@@ -607,16 +596,6 @@ input {
   margin: 0 auto;
   max-width: 1520px;
   min-width: 1020px;
-}
-
-.small-board {
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #ffffff;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  height: 290px;
 }
 
 .board {
@@ -710,7 +689,7 @@ input {
 }
 
 .chat-box {
-  height: 500px;
+  height: 350px;
   overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;
@@ -912,4 +891,34 @@ input {
 .write-button:hover {
   background-color: #218838;
 }
+
+.small-board {
+  padding: 30px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  height: 450px;
+}
+
+.top-posts-list li {
+  background: #f8f9fa; /* 연한 회색 배경 */
+  padding: 20px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: left;
+  margin: 5px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: left;
+  color: #333;
+}
+
 </style>
