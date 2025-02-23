@@ -87,7 +87,7 @@
         </div>
       </div>
   
-      <div class="section">
+      <!-- <div class="section">
         <p>Period</p>
         <div class="date-picker">
           <label for="startDate">시작 날짜:</label>
@@ -102,7 +102,7 @@
         <div class="selected-dates">
           <p>📆 선택한 기간: <strong>{{ startDate }} ~ {{ endDate }}</strong></p>
         </div>
-      </div>
+      </div> -->
   
       <div class="section">
         <button @click="sendAnalysisData" class="analysis-btn">🕵️Analysis</button>

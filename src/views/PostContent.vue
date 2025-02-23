@@ -140,8 +140,7 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%); /* 중앙 정렬 */
   
-  max-width: 1000px;
-  width: 100%; /* 가로 크기 조정 */
+  max-width: 900px;
   padding: 20px;
   font-family: 'Noto Sans KR', sans-serif;
   border-radius: 15px;
@@ -155,7 +154,7 @@ export default {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 24px;
   margin-bottom: 30px;
-  
+  width: 800px;
 }
 
 .title {
@@ -193,6 +192,7 @@ export default {
   text-align: left;
   padding: 0;
   margin: 0;
+  width: 800px;
 }
 
 .comments-section li {

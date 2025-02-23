@@ -1,64 +1,40 @@
 <template>
-    <footer class="footer">
-      <div class="footer-content">
-        <p>&copy; 2025 Your Company. All rights reserved.</p>
-        <nav>
-          <ul>
-            <li><a href="/contact">Contact Me</a></li>
-          </ul>
-        </nav>
-      </div>
-    </footer>
-  </template>
-  
-  <script>
-  export default {
-    name: 'Footer',
-  }
-  </script>
-  
-  <style scoped>
-  .footer {
-    background-color: #444444;
-    color: white;
-    padding: 20px;
-    text-align: center;
-    position: relative; /* 고정되지 않도록 설정 */
-    width: 100%;
-  }
-  
-  .footer-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  footer p {
-    margin: 0;
-  }
-  
-  footer nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: 15px;
-  }
-  
-  footer nav ul li {
-    display: inline;
-  }
-  
-  footer nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 14px;
-  }
-  
-  footer nav ul li a:hover {
-    text-decoration: underline;
-  }
-  </style>
-  
+  <footer class="footer">
+    <div class="footer-content">
+      <p>Contact Me : box7012@naver.com</p>
+      <p>&copy; 2025 Coin-Dashboard. All rights reserved.</p>
+    </div>
+  </footer>
+</template>
+
+<script>
+export default {
+  name: 'Footer',
+}
+</script>
+
+<style scoped>
+.footer {
+  background-color: #161616;
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between; /* 양쪽 정렬 */
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 20px; /* 좌우 여백 추가 */
+}
+
+footer p {
+  margin: 0;
+  color: rgb(255, 255, 255);
+  font-size: 18px;
+}
+
+</style>

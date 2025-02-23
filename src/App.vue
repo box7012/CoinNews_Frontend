@@ -40,24 +40,24 @@ export default {
 
 .content {
   display: flex;
-  justify-content: center; /* 가로 중앙 정렬 */
-  /* align-items: center; 세로 중앙 정렬 */
+  justify-content: center; 
+  /* align-items: center;  */
   width: 100%;
   max-width: 1400px;
   padding: 20px;
   box-sizing: border-box;
   flex-grow: 1; /* 남은 공간을 채우도록 설정 */
-  margin-top: 360px;
+  margin-top: 430px;
 }
 
 .footer {
   position: relative;
   width: 100%;
   margin-top: 40px;
-  background-color: #444444; /* 푸터 배경색 */
+  background-color: #161616; /* 푸터 배경색 */
   padding: 20px;
   text-align: center;
-  border-top: 1px solid #797979; /* 상단 테두리 */
+  border-top: 1px solid #161616; /* 상단 테두리 */
 }
 
 

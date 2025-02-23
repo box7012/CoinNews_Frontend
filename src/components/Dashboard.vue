@@ -3,6 +3,9 @@
     <div class="dashboard-grid">
       <div class="dashboard-frame-item large-item">
         <CoinMarketVue />
+        <a href="https://www.coingecko.com" target="_blank">
+          <img src="../assets/images/coingeckologo.png" alt="CoinGecko Logo">
+      </a>
       </div>
       <div class="dashboard-frame-item">
         <CoinChartVue />
@@ -50,7 +53,7 @@ export default {
   gap: 10px;
   height: 100vh;
   margin: auto;
-  margin-top: 0px;
+  margin-top: -100px;
 }
 
 .dashboard-frame-item {

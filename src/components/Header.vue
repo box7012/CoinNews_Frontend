@@ -1,6 +1,7 @@
 <template>
     <div :class="['header', { dark: isDarkMode }]">
-        <h1>Welcome!</h1>
+        <img src="../assets/images/coin-dashboardlogo.png" alt="Coin Dashboard Logo" style="width: 54px; height: 54px; margin-left: 20px;" >
+        <h1 style="white-space: nowrap;">Coin-Dashboard</h1>
         <div class="menu-bar">
             <div class="tab-menu">
                 <button 
@@ -147,6 +148,7 @@ body.dark .login-btn:hover, body.dark .toggle-dark-mode:hover {
 
 .header h1 {
     margin-bottom: 10px;
+    margin-left: 0px;
 }
 
 

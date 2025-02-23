@@ -57,14 +57,13 @@ export default {
     async fetchData() {
       try {
         const response = await axios.get(
-          `https://api.coingecko.com/api/v3/coins/${this.formatChangedSelectedCoin}/ohlc?vs_currency=usd&days=365&x-cg-api-key=${import.meta.env.VITE_CG_API_KEY}`,
+          `https://api.coingecko.com/api/v3/coins/${this.formatChangedSelectedCoin}/ohlc?vs_currency=usd&days=365&x_cg_dem_api_key=${import.meta.env.VITE_CG_API_KEY}`,
           {
             headers: {
               Accept: "application/json",
             },
           }
         );
-
         if (response.data && Array.isArray(response.data)) {
           const data = response.data;
           const formattedData = data.map(item => ({
