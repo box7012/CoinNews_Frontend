@@ -64,7 +64,8 @@ export default {
           query: this.searchQuery,
         });
 
-        this.news = response.data.slice(-5);
+        // this.news = response.data.slice(-5);
+        this.news = response.data;
       } catch (error) {
         console.error("검색 실패 : ", error);
       }
@@ -79,7 +80,6 @@ export default {
       try {
         if (!this.searchQuery) { 
           const response = await axios.get('/api/news');
-          // const response = await axios.get('http://192.168.0.3:8080/api/news');
           this.news = response.data.slice(-40);
         }
       } catch (error) {
@@ -116,202 +116,173 @@ export default {
 
 <style scoped>
 
-#app {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
 .news {
-  width: 80%;
-  margin: 1680px auto 0; /* 위쪽 여백 180px, 좌우 중앙 정렬 */
-  border-radius: 15px; /* 둥근 테두리 */
+  width: 90%;
+  min-width: 1200px;
+  padding: 0px;
+  border-radius: 15px;
+  background: #f9f9f9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  flex-grow: 1;
+  max-height: 1000px;
+  overflow: auto;
+  top: 20px;
+  min-height: 1000px;
 }
 
 .news-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  border-bottom: 2px solid #ddd;
-  border-radius: 15px; /* 둥근 테두리 */
+  padding-bottom: 15px;
+  border-bottom: 2px solid #808080;
+  position: sticky;
+  top: 0; /* 최상단에 고정 */
+  z-index: 400; /* 다른 요소 위에 배치 */
+  background-color: #ffffff;
+}
+
+.news-header h1 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin: 10px;
 }
 
 .search-bar {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: center; /* 버튼들을 세로로 가운데 정렬 */
+  gap: 10px;
 }
 
-/* .search-bar 내부의 input에 대해서는 width를 auto로 오버라이드 */
 .search-bar input {
-  padding: 8px;
-  font-size: 1rem;
+  padding: 10px;
+  font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  flex: 1;
-  min-width: 150px;
-  width: auto !important; /* 전역 규칙의 width를 덮어씀 */
+  border-radius: 6px;
+  outline: none;
+  width: 200px;
 }
 
 .search-button,
 .clear-button {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
-  align-items: center;
+  align-items: center; /* 세로로 가운데 정렬 */
   justify-content: center;
-  background-color: transparent;
-  border: 2px solid black;
-  border-radius: 4px;
-  font-size: 1rem;
+  background-color: #4c91f1;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 18px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  flex-shrink: 0;
+  transition: background 0.2s ease;
+  position: static;
 }
 
 .search-button:hover,
 .clear-button:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-.search-button:active,
-.clear-button:active {
-  transform: scale(0.9);
-}
-
-button {
-  background-color: #4C91F1;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  font-size: 1rem;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-button:hover {
   background-color: #3b7cd7;
 }
 
-button:active {
-  transform: scale(0.95);
-}
-
 .news-container {
-  position: relative;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  border-radius: 15px;
-}
-
-.news-time-column {
-  width: 150px; /* 고정된 시간 컬럼 */
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start; /* 시간 텍스트 왼쪽 정렬 */
-  padding-right: 20px;
-  border-right: 2px solid #ddd;
+  gap: 15px;
+  max-height: fit-content;
 }
 
 .news-item {
   display: flex;
-  align-items: center; /* 세로로 중앙 정렬 */
-  border-bottom: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  background: white;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  text-align: left;
+  
 }
 
-.news-time {
-  width: 120px; /* 시간 부분 너비 지정 */
+.news-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.news-time-column {
+  min-width: 120px;
+  text-align: center;
+  align-items: center;    
+  justify-content: center;
   font-size: 14px;
   color: #777;
-  text-align: center;
-}
-
-.news-details {
-  flex: 1; /* 남은 공간을 차지 */
-  padding-left: 15px;
-  text-align: left;
-}
-
-.news-title {
-  font-size: 16px;
-  font-weight: bold;
-  text-align: left;
 }
 
 .news-title a {
-  color: #000000; /* 기본 색상 */
-  text-decoration: none; /* 링크 밑줄 제거 */
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  text-align: left;
 }
 
 .news-title a:hover {
-  color: #aa4e4e; /* 클릭 시 보라색 */
+  color: #aa4e4e;
 }
 
 .news-preview {
   font-size: 14px;
-  color: #6f6f6f;
-}
-
-.preview-text {
-  font-size: 14px;
-  color: #6f6f6f;
+  color: #666;
 }
 
 /* 다크 모드 스타일 */
+.dark .news {
+  background: #2c2c2c;
+  color: white;
+}
+
 .dark .news-header {
-  background-color: #2c2c2c; /* 헤더 배경 어두운 색 */
-  color: #ffffff; /* 글자 색 흰색 */
-  border-bottom: 2px solid #444444; /* 헤더 밑의 선 색 변경 */
+  border-bottom: 2px solid #444;
+  background-color: #2c2c2c;
+}
+
+.dark .news-header h1 {
+  color: rgb(255, 255, 255);
 }
 
 .dark .search-bar input {
-  background-color: #333333; /* 입력 필드 배경 어두운 색 */
-  color: #ffffff; /* 글자 색 흰색 */
-  border: 1px solid #444444; /* 입력 필드 테두리 색 변경 */
+  background: #444;
+  color: white;
+  border: 1px solid #666;
 }
 
 .dark .search-button,
 .dark .clear-button {
-  background-color: #444444; /* 버튼 배경 색 어두운 색 */
+  background: #555;
   color: white;
-  border: 2px solid #666666; /* 버튼 테두리 색 변경 */
-}
-
-.dark .search-button:hover,
-.dark .clear-button:hover {
-  background-color: #555555; /* 버튼 hover 시 배경 색 */
-}
-
-.dark .news-container {
-  background-color: #1b1b1b; /* 뉴스 컨테이너 배경 어두운 색 */
 }
 
 .dark .news-item {
-  background-color: #2c2c2c; /* 뉴스 항목 배경 어두운 색 */
-  border-bottom: 1px solid #444444; /* 항목 밑 선 색 */
+  background: #3b3b3b;
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
 }
 
-.dark .news-time {
-  color: #aaa; /* 시간 색상 연한 회색 */
+.dark .news-item:hover {
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
 }
 
 .dark .news-title a {
-  color: #ffffff; /* 링크 색상 흰색 */
+  color: #fff;
 }
 
 .dark .news-title a:hover {
-  color: #aa4e4e; /* 클릭 시 보라색 */
+  color: #ff6b6b;
 }
 
-.dark .news-preview,
-.dark .preview-text {
-  color: #999; /* 텍스트 색상 연한 회색 */
+.dark .news-preview {
+  color: #ccc;
 }
+
 </style>

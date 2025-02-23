@@ -100,6 +100,7 @@ mounted() {
     background-color: #ffffff; /* light 모드에서 불투명한 배경 설정 */
     padding-top: 25px;
     padding-bottom: 25px;
+    height: 100px;
 }
 
 .header.dark {
@@ -269,7 +270,7 @@ body {
     border: 1px solid #dee2e6;
     max-width: 1565px;
     margin: 0 auto; /* 수평 중앙 정렬 */
-    min-height: 1000px;
+    /* min-height: 10px; */
 }
 
 .dark .frame-item {

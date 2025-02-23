@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="board chat-container">
-        <div class="chat-box">
+        <div class="chat-box" ref="chatBox">
           <div v-for="(msg, index) in messages" :key="index" class="message">
             <div class="message-header">
               <span class="username">{{ msg.user }}</span> <span class="message-time">{{ formatChattingDate(msg.time) }}</span>
@@ -55,7 +55,6 @@
             <th class="col-author">등록자명</th>
             <th class="col-date">등록일자</th>
             <th class="col-views">조회수</th>
-            <!-- <th class="col-action">삭제</th> -->
           </tr>
         </thead>
         <tbody>
@@ -67,21 +66,9 @@
             <td>{{ post.email }}</td>
             <td>{{ formatDate(post.createdDate) }}</td>
             <td>{{ post.views }}</td>
-            <!-- <td>
-              <button @click="deletePost(post.id)" class="delete-button">삭제</button>
-            </td> -->
           </tr>
         </tbody>
       </table>
-
-      <!-- <div class="pagination">
-          <button @click="changePage(page)"
-                  v-for="page in totalPages"
-                  :key="page"
-                  :class="{ active: page === currentPage }">
-            {{ page }}
-          </button>
-      </div> -->
 
       <div class="pagination">
         <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1">
@@ -127,18 +114,26 @@ export default {
   },
 
   watch: {
-      isDarkMode(newValue) {
-        const appElement = document.querySelector('#app');
-        const bodyElement = document.body;
-        if (newValue) {
-          appElement.classList.add('dark');
-          bodyElement.classList.add('dark');
-        } else {
-          appElement.classList.remove('dark');
-          bodyElement.classList.remove('dark');
-        }
-      },
+    isDarkMode(newValue) {
+      const appElement = document.querySelector('#app');
+      const bodyElement = document.body;
+      if (newValue) {
+        appElement.classList.add('dark');
+        bodyElement.classList.add('dark');
+      } else {
+        appElement.classList.remove('dark');
+        bodyElement.classList.remove('dark');
+      }
     },
+
+    messages() {
+      // 메시지가 변경된 후 DOM 업데이트 완료 시 스크롤 이동
+      console.log("Messages changed, scrolling to bottom...");
+      this.$nextTick(() => {
+        this.scrollToBottom();
+      });
+    },
+  },
 
   computed: {
 
@@ -199,6 +194,14 @@ export default {
         this.posts = response.data.reverse();
       } catch (error) {
         console.error("Failed to load posts:", error);
+      }
+    },
+    
+    scrollToBottom() {
+      console.log("Scrolling to bottom...");
+      const chatBox = this.$refs.chatBox;
+      if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight;
       }
     },
 
@@ -275,10 +278,23 @@ export default {
     this.loadPosts();
 
     this.socket = new WebSocket("ws://localhost:8080/chat");
+    // this.socket = new WebSocket("wss://coin-dashboard.xyz/chat");  // 끝에 / 추가
+    
+    this.socket.onerror = (error) => {
+        console.error("WebSocket Error:", error);
+    };
+    
+    this.socket.onopen = () => {
+        console.log("WebSocket Connected!");
+    };
 
     this.socket.onmessage = (event) => {
       const parsedMessage = JSON.parse(event.data);
       this.messages.push(parsedMessage);
+      console.log("New message received, scrolling to bottom...");
+      this.$nextTick(() => {
+        this.scrollToBottom();
+      });
     };
 
     const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -318,9 +334,8 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  height: 800px;
-  margin-top: -150px;
-  
+  min-height: 1000px;
+  margin-top: 50px;
 }
 
 .top-section {
@@ -338,12 +353,6 @@ export default {
   width: 70%; /* 7 */
   flex-grow: 7;
   min-width: 660px;
-}
-
-.chat-container {
-  width: 30%; /* 3 */
-  min-width: 340px;
-  height: 600px;
 }
 
 .large-board {
@@ -458,17 +467,14 @@ export default {
 }
 /* 웹소켓 실시간 통신 */
 .chat-container {
-  width: 300px;
+  width: 30%; /* 3 */
+  min-width: 340px;
   margin: auto;
   text-align: center;
+  height: 600px;
 }
 
-.chat-box {
-  height: 500px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  padding: 10px;
-}
+
 .message {
   text-align: left;
   background: #f1f1f1;
@@ -690,7 +696,8 @@ input {
 }
 
 .chat-box {
-  height: 350px;
+  max-height: 350px;
+  min-height: 350px;
   overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;

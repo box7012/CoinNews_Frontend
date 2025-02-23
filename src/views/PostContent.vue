@@ -79,7 +79,8 @@ export default {
 
     async fetchPost(id) {
       try {
-        const response = await axios.get(`http://localhost:8080/api/posts/${id}`);
+        // const response = await axios.get(`http://localhost:8080/api/posts/${id}`);
+        const response = await axios.get(`/api/posts/${id}`);
         this.post = response.data;
       } catch (error) {
         console.error("게시글을 불러오는 중 오류 발생:", error);
@@ -88,7 +89,8 @@ export default {
 
     async fetchComments(id) {
       try {
-        const response = await axios.get(`http://localhost:8080/api/posts/${id}/comments`);
+        // const response = await axios.get(`http://localhost:8080/api/posts/${id}/comments`);
+        const response = await axios.get(`/api/posts/${id}/comments`);
         this.comments = response.data;
       } catch (error) {
         console.error("댓글을 불러오는 중 오류 발생:", error);
@@ -111,7 +113,7 @@ export default {
       }
 
       try {
-        const response = await axios.post(`http://localhost:8080/api/posts/${this.$route.params.id}/comments`, {
+        const response = await axios.post(`/api/posts/${this.$route.params.id}/comments`, {
           email: email,
           text: this.newComment.text
         }, {
@@ -133,9 +135,13 @@ export default {
 <style scoped>
 
 .post-container {
-  position: relative;
+  position: absolute; /* 화면 중앙 정렬을 위해 absolute 사용 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 중앙 정렬 */
+  
   max-width: 1000px;
-  top: -100px;
+  width: 100%; /* 가로 크기 조정 */
   padding: 20px;
   font-family: 'Noto Sans KR', sans-serif;
   border-radius: 15px;
@@ -149,7 +155,7 @@ export default {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 24px;
   margin-bottom: 30px;
-  width: 800px;
+  
 }
 
 .title {

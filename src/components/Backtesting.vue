@@ -278,8 +278,8 @@
             endDate: this.endDate,
           };
   
-          const response = await axios.post("http://192.168.0.2:8080/api/analysis", requestData);
-          //const response = await axios.post("https://coin-dashboard.xyz/api/analysis", requestData);
+          // const response = await axios.post("http://192.168.0.2:8080/api/analysis", requestData);
+          const response = await axios.post("https://coin-dashboard.xyz/api/analysis", requestData);
           this.imageBase64List = response.data.graphs.map(graph => "data:image/png;base64," + graph);
           this.backTestHistory = response.data.backTestHistory;
           this.finalValueList = response.data.finalValueList;

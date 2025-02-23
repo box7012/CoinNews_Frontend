@@ -130,8 +130,14 @@ export default {
 
 <style scoped>
 .signup {
-  width: 300px; /* 폼 너비 */
+  width: 350px; /* 폼 너비 */
   margin: 0 auto; /* 가운데 정렬 */
+  padding: 20px;
+  background-color: #f9f9f9; /* 배경 색상 */
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+  position: absolute;
+  top: 200px;
 }
 
 .error {
@@ -144,23 +150,40 @@ export default {
 form {
   display: flex;
   flex-direction: column; /* 세로로 나열 */
-  gap: 10px; /* 요소 간 간격 */
+  gap: 15px; /* 요소 간 간격 */
 }
 
 input,
 button {
-  padding: 10px; /* 내부 여백 */
+  padding: 12px 15px; /* 내부 여백 */
   font-size: 16px; /* 글자 크기 */
+  border-radius: 10px; /* 모서리 둥글게 */
+  border: 1px solid #ccc; /* 테두리 색상 */
+}
+
+input:focus,
+button:focus {
+  outline: none;
+  border-color: #4d90fe; /* 포커스 시 테두리 색상 */
+}
+
+input {
+  background-color: #fff; /* 입력란 배경색 */
 }
 
 button {
-  background-color: #007bff; /* 버튼 색상 */
+  background-color: #4caf50; /* 버튼 색상 */
   color: white;
   border: none;
   cursor: pointer;
+  transition: background-color 0.3s ease; /* 버튼 색상 전환 효과 */
 }
 
 button:hover {
-  background-color: #0056b3; /* 버튼 호버 색상 */
+  background-color: #45a049; /* 버튼 호버 색상 */
+}
+
+button:active {
+  background-color: #3e8e41; /* 클릭 시 버튼 색상 */
 }
 </style>
