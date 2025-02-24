@@ -278,8 +278,8 @@
             endDate: this.endDate,
           };
   
-          // const response = await axios.post("http://192.168.0.2:8080/api/analysis", requestData);
-          const response = await axios.post("https://coin-dashboard.xyz/api/analysis", requestData);
+          const response = await axios.post("http://192.168.0.2:8080/api/analysis", requestData);
+          // const response = await axios.post("https://coin-dashboard.xyz/api/analysis", requestData);
           this.imageBase64List = response.data.graphs.map(graph => "data:image/png;base64," + graph);
           this.backTestHistory = response.data.backTestHistory;
           this.finalValueList = response.data.finalValueList;
@@ -296,16 +296,17 @@
   <style scoped>
   /* 전체 컨테이너 스타일 */
   .container {
-    margin-top: 50px;
     display: grid;
     grid-template-columns: 1fr 4fr 3fr;
     gap: 20px;
-    padding: 0px;
-    height: 1000px;
+    padding: 20px;
     max-height: 25000px;
     background-color: #ffffff;
     font-family: 'Arial', sans-serif;
     width: 1465px;
+    min-height: 100vh; 
+    margin: 0 auto;
+    justify-content: center;
   }
   
   /* 왼쪽 패널 스타일 */
@@ -421,7 +422,7 @@
     padding: 25px;
     border-radius: 10px;
     /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
-    /* width: 750px; */
+    width: 750px;
   }
 
     /* 오른쪽 패널 스타일 */
@@ -429,8 +430,7 @@
     background-color: #e8eee7;
     padding: 20px;
     border-radius: 10px;
-    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
-    width: 500px;
+    width: 550px;
   }
   
   

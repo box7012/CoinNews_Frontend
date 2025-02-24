@@ -277,8 +277,8 @@ export default {
   mounted() {
     this.loadPosts();
 
-    this.socket = new WebSocket("ws://localhost:8080/chat");
-    // this.socket = new WebSocket("wss://coin-dashboard.xyz/chat");  // 끝에 / 추가
+    // this.socket = new WebSocket("ws://localhost:8080/chat");
+    this.socket = new WebSocket("wss://coin-dashboard.xyz/chat");  // 끝에 / 추가
     
     this.socket.onerror = (error) => {
         console.error("WebSocket Error:", error);
@@ -335,7 +335,8 @@ export default {
   flex-direction: column;
   gap: 20px;
   min-height: 1000px;
-  margin-top: 50px;
+  margin-top: 0px;
+  justify-content: flex-start;
 }
 
 .top-section {

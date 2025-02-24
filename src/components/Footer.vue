@@ -29,6 +29,7 @@ export default {
   margin: 0 auto;
   width: 100%;
   padding: 0 20px; /* 좌우 여백 추가 */
+  position: absolute;
 }
 
 footer p {

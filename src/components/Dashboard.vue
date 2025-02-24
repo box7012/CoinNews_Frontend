@@ -53,7 +53,6 @@ export default {
   gap: 10px;
   height: 100vh;
   margin: auto;
-  margin-top: -100px;
 }
 
 .dashboard-frame-item {

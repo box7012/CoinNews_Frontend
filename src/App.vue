@@ -30,28 +30,31 @@ export default {
 </script>
 
 <style>
-#app {
+.app {
   display: flex;
   flex-direction: column;
   align-items: center; /* 가로 중앙 정렬 */
   min-height: 100vh;
+  justify-content: center; 
 }
 
 
 .content {
   display: flex;
-  justify-content: center; 
-  /* align-items: center;  */
+  align-items: center;
+  justify-content: center;
+  align-items: center; 
   width: 100%;
   max-width: 1400px;
   padding: 20px;
   box-sizing: border-box;
-  flex-grow: 1; /* 남은 공간을 채우도록 설정 */
-  margin-top: 430px;
+  /* flex-grow: 1; */
+  min-height: 680px;
+  max-height: 15000px; 
+  margin: 0 auto; /* 수평 중앙 정렬 */
 }
 
 .footer {
-  position: relative;
   width: 100%;
   margin-top: 40px;
   background-color: #161616; /* 푸터 배경색 */
