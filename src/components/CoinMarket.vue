@@ -147,6 +147,7 @@ export default {
             params: {
               vs_currency: "usd",
               order: "market_cap_desc",
+              page: 1,
             },
           }
         );

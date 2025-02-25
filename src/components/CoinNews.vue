@@ -134,12 +134,12 @@ export default {
 .news-header {
   display: flex;
   justify-content: space-between;
-  padding-bottom: 15px;
   border-bottom: 2px solid #808080;
   position: sticky;
   top: 0; /* 최상단에 고정 */
   z-index: 400; /* 다른 요소 위에 배치 */
   background-color: #ffffff;
+  padding: 15px;
 }
 
 .news-header h1 {
@@ -192,6 +192,7 @@ export default {
   flex-direction: column;
   gap: 15px;
   max-height: fit-content;
+  padding: 5px;
 }
 
 .news-item {

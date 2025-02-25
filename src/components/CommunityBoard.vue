@@ -460,7 +460,6 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
 }
 
 .close-button:hover {

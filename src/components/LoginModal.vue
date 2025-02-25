@@ -15,7 +15,7 @@
         <button type="submit" class="center-button">로그인</button> <!-- submit으로 수정 -->
         <button @click="goToSignUp" type="button" class="center-button">회원가입</button>
       </form>
-      <p>-------간편 로그인-------</p>
+      <!-- <p>-------간편 로그인-------</p>
       <div class="social-logo-wrapper">
         <button class="social-logo"> 
           <img src="../assets/images/Naver.png" @click="naverLogin" style="width: 50px; height: auto;" />
@@ -26,7 +26,7 @@
         <button class="social-logo"> 
           <img src="../assets/images/Kakao.png" @click="kakaoLogin" style="width: 50px; height: auto;" />
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -236,6 +236,7 @@ p {
   /* border: 1px solid #000; */
   border-radius: 8px;  /* 둥근 모서리 제거 */
   padding: 3px;
+  box-shadow: none;
 }
 
 .close-btn:hover {
